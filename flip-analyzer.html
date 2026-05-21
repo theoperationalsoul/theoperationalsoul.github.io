@@ -40,7 +40,6 @@
       background: var(--lav-bg);
       color: var(--navy);
       min-height: 100vh;
-      /* push content below the sticky header */
       padding-top: 220px;
       padding-bottom: 48px;
     }
@@ -80,7 +79,6 @@
       color: rgba(255,255,255,0.85);
     }
 
-    /* Verdict pill */
     .verdict-wrap {
       display: flex;
       justify-content: center;
@@ -99,31 +97,17 @@
       transition: background 0.25s, color 0.25s;
     }
 
-    #verdict-pill.go {
-      background: var(--green-bg);
-      color: var(--green);
-    }
-    #verdict-pill.caution {
-      background: var(--amber-bg);
-      color: var(--amber);
-    }
-    #verdict-pill.nogo {
-      background: var(--red-bg);
-      color: var(--red);
-    }
-    #verdict-pill.empty {
-      background: rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.4);
-    }
+    #verdict-pill.go      { background: var(--green-bg); color: var(--green); }
+    #verdict-pill.caution { background: var(--amber-bg); color: var(--amber); }
+    #verdict-pill.nogo    { background: var(--red-bg);   color: var(--red); }
+    #verdict-pill.empty   { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
 
     .verdict-dot {
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: currentColor;
     }
 
-    /* Metric cards row */
     .metric-cards {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -204,20 +188,13 @@
       margin-top: 2px;
     }
 
-    .section-body {
-      padding: 14px 16px;
-    }
+    .section-body { padding: 14px 16px; }
 
     /* ============================================================
        INPUT FIELDS
     ============================================================ */
-    .field {
-      margin-bottom: 11px;
-    }
-
-    .field:last-child {
-      margin-bottom: 0;
-    }
+    .field { margin-bottom: 11px; }
+    .field:last-child { margin-bottom: 0; }
 
     .field label {
       display: block;
@@ -263,9 +240,7 @@
     }
 
     .input-wrap input::-webkit-outer-spin-button,
-    .input-wrap input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-    }
+    .input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
 
     .input-wrap input:focus {
       border-color: var(--violet);
@@ -275,12 +250,8 @@
     .input-wrap.has-prefix input { padding-left: 26px; }
     .input-wrap.has-suffix input { padding-right: 30px; }
 
-    /* Text input (address) */
-    .input-wrap input[type="text"] {
-      font-size: 13px;
-    }
+    .input-wrap input[type="text"] { font-size: 14px; }
 
-    /* Two-column layout for fields */
     .fields-2col {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -310,12 +281,8 @@
       min-width: 0;
     }
 
-    .reno-item .input-wrap {
-      width: 140px;
-      flex-shrink: 0;
-    }
+    .reno-item .input-wrap { width: 140px; flex-shrink: 0; }
 
-    /* Total row */
     .total-row {
       display: flex;
       align-items: center;
@@ -341,13 +308,9 @@
     }
 
     /* ============================================================
-       DEAL SUMMARY SECTION (read-only output rows)
+       DEAL SUMMARY
     ============================================================ */
-    .summary-rows {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
+    .summary-rows { display: flex; flex-direction: column; gap: 0; }
 
     .summary-row {
       display: flex;
@@ -357,15 +320,9 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .summary-row:last-child {
-      border-bottom: none;
-    }
+    .summary-row:last-child { border-bottom: none; }
 
-    .summary-row-label {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--gray);
-    }
+    .summary-row-label { font-size: 12px; font-weight: 500; color: var(--gray); }
 
     .summary-row-value {
       font-size: 13px;
@@ -373,11 +330,10 @@
       color: var(--navy);
     }
 
-    .summary-row-value.positive { color: var(--green); }
-    .summary-row-value.negative { color: var(--red); }
+    .summary-row-value.positive  { color: var(--green); }
+    .summary-row-value.negative  { color: var(--red); }
     .summary-row-value.highlight { color: var(--violet); }
 
-    /* MAO callout */
     .mao-callout {
       background: var(--lav-sec);
       border-left: 3px solid var(--violet);
@@ -395,17 +351,8 @@
       margin-bottom: 4px;
     }
 
-    .mao-callout-value {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--navy);
-    }
-
-    .mao-callout-sub {
-      font-size: 10px;
-      color: var(--gray);
-      margin-top: 3px;
-    }
+    .mao-callout-value { font-size: 22px; font-weight: 800; color: var(--navy); }
+    .mao-callout-sub   { font-size: 10px; color: var(--gray); margin-top: 3px; }
 
     /* ============================================================
        TOGGLE (Cash vs Financed)
@@ -432,18 +379,10 @@
       transition: background 0.15s, color 0.15s;
     }
 
-    .toggle-btn.active {
-      background: var(--navy);
-      color: var(--white);
-    }
+    .toggle-btn.active { background: var(--navy); color: var(--white); }
 
-    .financing-fields {
-      display: none;
-    }
-
-    .financing-fields.visible {
-      display: block;
-    }
+    .financing-fields { display: none; }
+    .financing-fields.visible { display: block; }
 
     /* ============================================================
        FOOTER
@@ -455,14 +394,10 @@
       color: var(--gray);
     }
 
-    .page-footer a {
-      color: var(--violet);
-      text-decoration: none;
-      font-weight: 600;
-    }
+    .page-footer a { color: var(--violet); text-decoration: none; font-weight: 600; }
 
     /* ============================================================
-       RESPONSIVE TWEAKS
+       RESPONSIVE
     ============================================================ */
     @media (max-width: 380px) {
       body { padding-top: 230px; }
@@ -530,7 +465,7 @@
         <div class="field">
           <label>Property Address (optional)</label>
           <div class="input-wrap">
-            <input type="text" id="address" placeholder="123 Main St, City, State" />
+            <input type="text" id="address" placeholder="123 Main St, City, State" autocomplete="off" />
           </div>
         </div>
 
@@ -539,14 +474,16 @@
             <label>After Repair Value (ARV)</label>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" id="arv" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" id="arv" placeholder="0" autocomplete="off"
+                     oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="field">
             <label>Purchase Price</label>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" id="purchase" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" id="purchase" placeholder="0" autocomplete="off"
+                     oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
         </div>
@@ -568,84 +505,84 @@
             <span class="reno-item-label">Demo &amp; Cleanup</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Roof</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">HVAC</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Plumbing</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Electrical</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Windows &amp; Doors</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Kitchen</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Bathrooms</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Flooring</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Paint &amp; Finishes</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Landscaping</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
           <div class="reno-item">
             <span class="reno-item-label">Other / Contingency</span>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
         </div>
@@ -671,14 +608,16 @@
           <div class="field">
             <label>Months to Hold</label>
             <div class="input-wrap">
-              <input type="number" id="months" placeholder="6" min="0" oninput="calculate()" />
+              <!-- Pre-filled with 6 — typical flip timeline -->
+              <input type="number" id="months" value="6" min="0" oninput="calculate()" />
             </div>
           </div>
           <div class="field">
             <label>Monthly Holding Costs</label>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="number" id="monthly-hold" placeholder="0" min="0" oninput="calculate()" />
+              <input type="text" inputmode="numeric" id="monthly-hold" placeholder="0" autocomplete="off"
+                     oninput="fmtDollar(this); calculate()" />
             </div>
           </div>
         </div>
@@ -687,14 +626,16 @@
           <div class="field">
             <label>Purchase Closing Costs</label>
             <div class="input-wrap has-suffix">
-              <input type="number" id="buy-close-pct" placeholder="2" min="0" max="100" step="0.1" oninput="calculate()" />
+              <!-- Pre-filled with typical 2% -->
+              <input type="number" id="buy-close-pct" value="2" min="0" max="100" step="0.1" oninput="calculate()" />
               <span class="input-suffix">%</span>
             </div>
           </div>
           <div class="field">
             <label>Sale Closing Costs</label>
             <div class="input-wrap has-suffix">
-              <input type="number" id="sell-close-pct" placeholder="2" min="0" max="100" step="0.1" oninput="calculate()" />
+              <!-- Pre-filled with typical 2% -->
+              <input type="number" id="sell-close-pct" value="2" min="0" max="100" step="0.1" oninput="calculate()" />
               <span class="input-suffix">%</span>
             </div>
           </div>
@@ -703,7 +644,8 @@
         <div class="field">
           <label>Agent Commission (on sale)</label>
           <div class="input-wrap has-suffix">
-            <input type="number" id="agent-pct" placeholder="5" min="0" max="100" step="0.1" oninput="calculate()" />
+            <!-- Pre-filled with typical 5% -->
+            <input type="number" id="agent-pct" value="5" min="0" max="100" step="0.1" oninput="calculate()" />
             <span class="input-suffix">%</span>
           </div>
         </div>
@@ -735,14 +677,16 @@
             <div class="field">
               <label>Down Payment</label>
               <div class="input-wrap has-suffix">
-                <input type="number" id="down-pct" placeholder="20" min="0" max="100" step="0.5" oninput="calculate()" />
+                <!-- Pre-filled with typical 20% hard money down -->
+                <input type="number" id="down-pct" value="20" min="0" max="100" step="0.5" oninput="calculate()" />
                 <span class="input-suffix">%</span>
               </div>
             </div>
             <div class="field">
               <label>Interest Rate (annual)</label>
               <div class="input-wrap has-suffix">
-                <input type="number" id="rate-pct" placeholder="10" min="0" max="100" step="0.1" oninput="calculate()" />
+                <!-- Pre-filled with typical 10% hard money rate -->
+                <input type="number" id="rate-pct" value="10" min="0" max="100" step="0.1" oninput="calculate()" />
                 <span class="input-suffix">%</span>
               </div>
             </div>
@@ -750,12 +694,12 @@
           <div class="field">
             <label>Loan Term (months held)</label>
             <div class="input-wrap">
-              <input type="number" id="loan-months" placeholder="6" min="0" oninput="calculate()" />
+              <!-- Pre-filled to match Months to Hold default -->
+              <input type="number" id="loan-months" value="6" min="0" oninput="calculate()" />
             </div>
           </div>
         </div>
 
-        <!-- Cash-on-Cash output (shown when financed) -->
         <div id="coc-output" style="display:none;">
           <div class="total-row">
             <span class="total-row-label">Down Payment Amount</span>
@@ -818,7 +762,6 @@
           </div>
         </div>
 
-        <!-- MAO Callout -->
         <div class="mao-callout">
           <div class="mao-callout-label">Maximum Allowable Offer (70% Rule)</div>
           <div class="mao-callout-value" id="mao-value">$0</div>
@@ -842,7 +785,22 @@
   ============================================================ -->
   <script>
     // ── State ──
-    let financingMode = 'cash'; // 'cash' | 'financed'
+    let financingMode = 'cash';
+
+    // ── Comma formatter for dollar inputs ──
+    // Strips non-digits, reformats with commas while preserving cursor position
+    function fmtDollar(el) {
+      const pos    = el.selectionStart;
+      const before = el.value.length;
+      // Remove everything except digits
+      const digits = el.value.replace(/[^0-9]/g, '');
+      if (digits === '') { el.value = ''; return; }
+      const formatted = parseInt(digits, 10).toLocaleString('en-US');
+      el.value = formatted;
+      // Adjust cursor for added/removed commas
+      const diff = formatted.length - before;
+      try { el.setSelectionRange(pos + diff, pos + diff); } catch(e) {}
+    }
 
     // ── Financing toggle ──
     function setFinancing(mode) {
@@ -855,17 +813,26 @@
     }
 
     // ── Helpers ──
+    // Read a numeric value from an input (handles commas in text inputs)
     function val(id) {
-      const v = parseFloat(document.getElementById(id).value);
+      const el = document.getElementById(id);
+      if (!el) return 0;
+      const raw = el.value.replace(/,/g, '');
+      const v = parseFloat(raw);
+      return isNaN(v) ? 0 : v;
+    }
+
+    // Read a numeric value from an element directly (for .reno class inputs)
+    function valEl(el) {
+      const raw = el.value.replace(/,/g, '');
+      const v = parseFloat(raw);
       return isNaN(v) ? 0 : v;
     }
 
     function fmt$(n) {
       if (n === 0) return '$0';
       const abs = Math.abs(n);
-      const s = abs >= 1000
-        ? '$' + Math.round(abs).toLocaleString()
-        : '$' + abs.toFixed(0);
+      const s = '$' + Math.round(abs).toLocaleString('en-US');
       return n < 0 ? '−' + s : s;
     }
 
@@ -899,23 +866,23 @@
       const renoInputs = document.querySelectorAll('.reno');
       let totalReno = 0;
       renoInputs.forEach(inp => {
-        const v = parseFloat(inp.value);
-        if (!isNaN(v) && v > 0) totalReno += v;
+        const v = valEl(inp);
+        if (v > 0) totalReno += v;
       });
 
       // ----- HOLDING & CLOSING -----
-      const holdingCost  = months * monthlyH;
-      const buyCloseCost = purchase * buyClose;
-      const sellCloseCost= arv * (sellClose + agentPct);
-      const totalHC      = holdingCost + buyCloseCost + sellCloseCost;
+      const holdingCost   = months * monthlyH;
+      const buyCloseCost  = purchase * buyClose;
+      const sellCloseCost = arv * (sellClose + agentPct);
+      const totalHC       = holdingCost + buyCloseCost + sellCloseCost;
 
       // ----- FINANCING -----
-      const downPct     = val('down-pct') / 100;
-      const ratePct     = val('rate-pct') / 100;
-      const loanMonths  = val('loan-months') || months;
+      const downPct    = val('down-pct') / 100;
+      const ratePct    = val('rate-pct') / 100;
+      const loanMonths = val('loan-months') || months;
 
-      let downDollar    = 0;
-      let interestCost  = 0;
+      let downDollar   = 0;
+      let interestCost = 0;
 
       if (financingMode === 'financed' && purchase > 0) {
         downDollar   = purchase * downPct;
@@ -979,7 +946,7 @@
       hRoi.textContent = arv > 0 ? fmtPct(roi) : '—';
       setClass('hdr-roi', arv > 0 ? (roi >= 20 ? 'positive' : roi >= 10 ? 'neutral' : 'negative') : 'neutral');
 
-      const hCoc = document.getElementById('hdr-coc');
+      const hCoc    = document.getElementById('hdr-coc');
       const hCocSub = document.getElementById('hdr-coc-sub');
       if (financingMode === 'financed' && coc !== null) {
         hCoc.textContent = fmtPct(coc);
@@ -996,7 +963,7 @@
       setClass('hdr-mao', arv > 0 ? (purchase <= mao ? 'positive' : 'negative') : 'neutral');
 
       // ----- VERDICT -----
-      const pill = document.getElementById('verdict-pill');
+      const pill     = document.getElementById('verdict-pill');
       const pillText = document.getElementById('verdict-text');
 
       if (arv === 0 || purchase === 0) {
@@ -1014,7 +981,7 @@
       }
     }
 
-    // Run once on load to initialize outputs
+    // Run once on load to initialize outputs with pre-filled defaults
     calculate();
   </script>
 
