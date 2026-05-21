@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Property Flip Deal Analyzer — TheOperationalSoul</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       BRAND DESIGN SYSTEM — TheOperationalSoul
+       Colors, typography, and spacing tokens
+    ============================================================ */
+    :root {
+      --navy:      #1E1B4B;
+      --violet:    #7C3AED;
+      --indigo:    #4338CA;
+      --lav-input: #F5F3FF;
+      --lav-sec:   #EDE9FE;
+      --lav-bg:    #F0EFFA;
+      --green:     #16A34A;
+      --green-bg:  #DCFCE7;
+      --amber:     #D97706;
+      --amber-bg:  #FEF3C7;
+      --red:       #DC2626;
+      --red-bg:    #FEE2E2;
+      --gray:      #6B7280;
+      --border:    #E5E7EB;
+      --white:     #FFFFFF;
+
+      --radius:    10px;
+      --card-shadow: 0 1px 4px rgba(30,27,75,0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--lav-bg);
+      color: var(--navy);
+      min-height: 100vh;
+      /* push content below the sticky header */
+      padding-top: 220px;
+      padding-bottom: 48px;
+    }
+
+    /* ============================================================
+       STICKY HEADER
+    ============================================================ */
+    #sticky-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--navy);
+      box-shadow: 0 2px 12px rgba(30,27,75,0.25);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .brand-name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+    }
+
+    .tool-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* Verdict pill */
+    .verdict-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 8px 16px 6px;
+    }
+
+    #verdict-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    #verdict-pill.go {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+    #verdict-pill.caution {
+      background: var(--amber-bg);
+      color: var(--amber);
+    }
+    #verdict-pill.nogo {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+    #verdict-pill.empty {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+    }
+
+    .verdict-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Metric cards row */
+    .metric-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .metric-card {
+      background: rgba(255,255,255,0.05);
+      padding: 9px 10px 10px;
+      text-align: center;
+    }
+
+    .metric-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 3px;
+    }
+
+    .metric-value {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+      transition: color 0.2s;
+    }
+
+    .metric-value.positive { color: #6EE7B7; }
+    .metric-value.negative { color: #FCA5A5; }
+    .metric-value.neutral  { color: var(--white); }
+
+    .metric-sub {
+      font-size: 9px;
+      color: rgba(255,255,255,0.35);
+      margin-top: 2px;
+    }
+
+    /* ============================================================
+       PAGE CONTENT
+    ============================================================ */
+    .page-inner {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ============================================================
+       SECTION CARDS
+    ============================================================ */
+    .section-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--card-shadow);
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      background: var(--navy);
+      padding: 11px 16px;
+    }
+
+    .section-header h2 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .section-header p {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 2px;
+    }
+
+    .section-body {
+      padding: 14px 16px;
+    }
+
+    /* ============================================================
+       INPUT FIELDS
+    ============================================================ */
+    .field {
+      margin-bottom: 11px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-prefix,
+    .input-suffix {
+      position: absolute;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--indigo);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .input-prefix { left: 11px; }
+    .input-suffix { right: 11px; }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--navy);
+      background: var(--lav-input);
+      outline: none;
+      transition: border-color 0.15s;
+      -moz-appearance: textfield;
+    }
+
+    .input-wrap input::-webkit-outer-spin-button,
+    .input-wrap input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    .input-wrap input:focus {
+      border-color: var(--violet);
+      background: var(--white);
+    }
+
+    .input-wrap.has-prefix input { padding-left: 26px; }
+    .input-wrap.has-suffix input { padding-right: 30px; }
+
+    /* Text input (address) */
+    .input-wrap input[type="text"] {
+      font-size: 13px;
+    }
+
+    /* Two-column layout for fields */
+    .fields-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* ============================================================
+       RENOVATION LINE ITEMS
+    ============================================================ */
+    .reno-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .reno-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .reno-item-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--navy);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .reno-item .input-wrap {
+      width: 140px;
+      flex-shrink: 0;
+    }
+
+    /* Total row */
+    .total-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: var(--lav-sec);
+      border-radius: 7px;
+      margin-top: 12px;
+    }
+
+    .total-row-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--indigo);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .total-row-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    /* ============================================================
+       DEAL SUMMARY SECTION (read-only output rows)
+    ============================================================ */
+    .summary-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray);
+    }
+
+    .summary-row-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .summary-row-value.positive { color: var(--green); }
+    .summary-row-value.negative { color: var(--red); }
+    .summary-row-value.highlight { color: var(--violet); }
+
+    /* MAO callout */
+    .mao-callout {
+      background: var(--lav-sec);
+      border-left: 3px solid var(--violet);
+      border-radius: 7px;
+      padding: 12px 14px;
+      margin-top: 14px;
+    }
+
+    .mao-callout-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 4px;
+    }
+
+    .mao-callout-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .mao-callout-sub {
+      font-size: 10px;
+      color: var(--gray);
+      margin-top: 3px;
+    }
+
+    /* ============================================================
+       TOGGLE (Cash vs Financed)
+    ============================================================ */
+    .toggle-group {
+      display: flex;
+      background: var(--lav-sec);
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 14px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .toggle-btn.active {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .financing-fields {
+      display: none;
+    }
+
+    .financing-fields.visible {
+      display: block;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .page-footer {
+      text-align: center;
+      padding: 20px 16px 0;
+      font-size: 10px;
+      color: var(--gray);
+    }
+
+    .page-footer a {
+      color: var(--violet);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       RESPONSIVE TWEAKS
+    ============================================================ */
+    @media (max-width: 380px) {
+      body { padding-top: 230px; }
+      .metric-value { font-size: 14px; }
+      .metric-label { font-size: 8px; }
+      .reno-item .input-wrap { width: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       STICKY HEADER
+  ============================================================ -->
+  <div id="sticky-header">
+
+    <div class="header-brand">
+      <span class="brand-name">TheOperationalSoul</span>
+      <span class="tool-name">Property Flip Deal Analyzer</span>
+    </div>
+
+    <div class="verdict-wrap">
+      <div id="verdict-pill" class="empty">
+        <div class="verdict-dot"></div>
+        <span id="verdict-text">Enter numbers to see your verdict</span>
+      </div>
+    </div>
+
+    <div class="metric-cards">
+      <div class="metric-card">
+        <div class="metric-label">Net Profit</div>
+        <div class="metric-value neutral" id="hdr-profit">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">ROI</div>
+        <div class="metric-value neutral" id="hdr-roi">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Cash-on-Cash</div>
+        <div class="metric-value neutral" id="hdr-coc">—</div>
+        <div class="metric-sub" id="hdr-coc-sub"></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Max Offer</div>
+        <div class="metric-value neutral" id="hdr-mao">—</div>
+      </div>
+    </div>
+
+  </div><!-- /sticky-header -->
+
+
+  <!-- ============================================================
+       PAGE CONTENT
+  ============================================================ -->
+  <div class="page-inner">
+
+    <!-- ── SECTION 1: PROPERTY DETAILS ── -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>Property Details</h2>
+        <p>Start with the address, ARV, and your target purchase price</p>
+      </div>
+      <div class="section-body">
+
+        <div class="field">
+          <label>Property Address (optional)</label>
+          <div class="input-wrap">
+            <input type="text" id="address" placeholder="123 Main St, City, State" />
+          </div>
+        </div>
+
+        <div class="fields-2col">
+          <div class="field">
+            <label>After Repair Value (ARV)</label>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="arv" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Purchase Price</label>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="purchase" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /section-card -->
+
+
+    <!-- ── SECTION 2: RENOVATION COSTS ── -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>Renovation Costs</h2>
+        <p>Enter your estimated cost for each category (leave blank if not applicable)</p>
+      </div>
+      <div class="section-body">
+
+        <div class="reno-items">
+          <div class="reno-item">
+            <span class="reno-item-label">Demo &amp; Cleanup</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Roof</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">HVAC</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Plumbing</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Electrical</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Windows &amp; Doors</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Kitchen</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Bathrooms</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Flooring</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Paint &amp; Finishes</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Landscaping</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="reno-item">
+            <span class="reno-item-label">Other / Contingency</span>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+        </div>
+
+        <div class="total-row">
+          <span class="total-row-label">Total Renovation</span>
+          <span class="total-row-value" id="total-reno">$0</span>
+        </div>
+
+      </div>
+    </div><!-- /section-card -->
+
+
+    <!-- ── SECTION 3: HOLDING & CLOSING COSTS ── -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>Holding &amp; Closing Costs</h2>
+        <p>Costs you carry while holding the property plus transaction fees</p>
+      </div>
+      <div class="section-body">
+
+        <div class="fields-2col">
+          <div class="field">
+            <label>Months to Hold</label>
+            <div class="input-wrap">
+              <input type="number" id="months" placeholder="6" min="0" oninput="calculate()" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Monthly Holding Costs</label>
+            <div class="input-wrap has-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="monthly-hold" placeholder="0" min="0" oninput="calculate()" />
+            </div>
+          </div>
+        </div>
+
+        <div class="fields-2col">
+          <div class="field">
+            <label>Purchase Closing Costs</label>
+            <div class="input-wrap has-suffix">
+              <input type="number" id="buy-close-pct" placeholder="2" min="0" max="100" step="0.1" oninput="calculate()" />
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Sale Closing Costs</label>
+            <div class="input-wrap has-suffix">
+              <input type="number" id="sell-close-pct" placeholder="2" min="0" max="100" step="0.1" oninput="calculate()" />
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Agent Commission (on sale)</label>
+          <div class="input-wrap has-suffix">
+            <input type="number" id="agent-pct" placeholder="5" min="0" max="100" step="0.1" oninput="calculate()" />
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+
+        <div class="total-row">
+          <span class="total-row-label">Total Holding &amp; Closing</span>
+          <span class="total-row-value" id="total-hc">$0</span>
+        </div>
+
+      </div>
+    </div><!-- /section-card -->
+
+
+    <!-- ── SECTION 4: FINANCING ── -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>Financing</h2>
+        <p>Cash deals skip interest — financed deals calculate Cash-on-Cash return</p>
+      </div>
+      <div class="section-body">
+
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="btn-cash" onclick="setFinancing('cash')">Cash Deal</button>
+          <button class="toggle-btn" id="btn-financed" onclick="setFinancing('financed')">Financed</button>
+        </div>
+
+        <div class="financing-fields" id="financing-fields">
+          <div class="fields-2col">
+            <div class="field">
+              <label>Down Payment</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="down-pct" placeholder="20" min="0" max="100" step="0.5" oninput="calculate()" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Interest Rate (annual)</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="rate-pct" placeholder="10" min="0" max="100" step="0.1" oninput="calculate()" />
+                <span class="input-suffix">%</span>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Loan Term (months held)</label>
+            <div class="input-wrap">
+              <input type="number" id="loan-months" placeholder="6" min="0" oninput="calculate()" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Cash-on-Cash output (shown when financed) -->
+        <div id="coc-output" style="display:none;">
+          <div class="total-row">
+            <span class="total-row-label">Down Payment Amount</span>
+            <span class="total-row-value" id="down-dollar">$0</span>
+          </div>
+          <div class="total-row" style="margin-top:8px;">
+            <span class="total-row-label">Interest Cost</span>
+            <span class="total-row-value" id="interest-cost">$0</span>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /section-card -->
+
+
+    <!-- ── SECTION 5: DEAL SUMMARY ── -->
+    <div class="section-card">
+      <div class="section-header">
+        <h2>Deal Summary</h2>
+        <p>All-in cost breakdown and key metrics</p>
+      </div>
+      <div class="section-body">
+
+        <div class="summary-rows">
+          <div class="summary-row">
+            <span class="summary-row-label">Purchase Price</span>
+            <span class="summary-row-value" id="sum-purchase">$0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Renovation Costs</span>
+            <span class="summary-row-value" id="sum-reno">$0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Holding &amp; Closing Costs</span>
+            <span class="summary-row-value" id="sum-hc">$0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Interest Costs</span>
+            <span class="summary-row-value" id="sum-interest">$0</span>
+          </div>
+          <div class="summary-row" style="border-bottom:2px solid var(--navy); padding-bottom:12px; margin-bottom:2px;">
+            <span class="summary-row-label" style="font-weight:700; color:var(--navy);">Total All-In Cost</span>
+            <span class="summary-row-value" id="sum-total" style="font-size:15px;">$0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Sale Price (ARV)</span>
+            <span class="summary-row-value" id="sum-arv">$0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Net Profit</span>
+            <span class="summary-row-value" id="sum-profit">$0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">ROI</span>
+            <span class="summary-row-value" id="sum-roi">0.0%</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-row-label">Cash-on-Cash Return</span>
+            <span class="summary-row-value" id="sum-coc">—</span>
+          </div>
+        </div>
+
+        <!-- MAO Callout -->
+        <div class="mao-callout">
+          <div class="mao-callout-label">Maximum Allowable Offer (70% Rule)</div>
+          <div class="mao-callout-value" id="mao-value">$0</div>
+          <div class="mao-callout-sub">= (ARV × 70%) − Total Renovation</div>
+        </div>
+
+      </div>
+    </div><!-- /section-card -->
+
+
+    <div class="page-footer">
+      Built by <a href="https://www.etsy.com/shop/TheOperationalSoul" target="_blank">TheOperationalSoul</a> &nbsp;·&nbsp;
+      For real estate investors who run the numbers before they run the deal.
+    </div>
+
+  </div><!-- /page-inner -->
+
+
+  <!-- ============================================================
+       JAVASCRIPT — CALCULATIONS
+  ============================================================ -->
+  <script>
+    // ── State ──
+    let financingMode = 'cash'; // 'cash' | 'financed'
+
+    // ── Financing toggle ──
+    function setFinancing(mode) {
+      financingMode = mode;
+      document.getElementById('btn-cash').classList.toggle('active', mode === 'cash');
+      document.getElementById('btn-financed').classList.toggle('active', mode === 'financed');
+      document.getElementById('financing-fields').classList.toggle('visible', mode === 'financed');
+      document.getElementById('coc-output').style.display = mode === 'financed' ? 'block' : 'none';
+      calculate();
+    }
+
+    // ── Helpers ──
+    function val(id) {
+      const v = parseFloat(document.getElementById(id).value);
+      return isNaN(v) ? 0 : v;
+    }
+
+    function fmt$(n) {
+      if (n === 0) return '$0';
+      const abs = Math.abs(n);
+      const s = abs >= 1000
+        ? '$' + Math.round(abs).toLocaleString()
+        : '$' + abs.toFixed(0);
+      return n < 0 ? '−' + s : s;
+    }
+
+    function fmtPct(n) {
+      return (n >= 0 ? '' : '−') + Math.abs(n).toFixed(1) + '%';
+    }
+
+    function setEl(id, text) {
+      document.getElementById(id).textContent = text;
+    }
+
+    function setClass(id, cls) {
+      const el = document.getElementById(id);
+      el.classList.remove('positive', 'negative', 'neutral', 'highlight');
+      if (cls) el.classList.add(cls);
+    }
+
+    // ── Main calculation ──
+    function calculate() {
+
+      // ----- INPUTS -----
+      const arv      = val('arv');
+      const purchase = val('purchase');
+      const months   = val('months') || 0;
+      const monthlyH = val('monthly-hold');
+      const buyClose = val('buy-close-pct') / 100;
+      const sellClose= val('sell-close-pct') / 100;
+      const agentPct = val('agent-pct') / 100;
+
+      // Reno line items
+      const renoInputs = document.querySelectorAll('.reno');
+      let totalReno = 0;
+      renoInputs.forEach(inp => {
+        const v = parseFloat(inp.value);
+        if (!isNaN(v) && v > 0) totalReno += v;
+      });
+
+      // ----- HOLDING & CLOSING -----
+      const holdingCost  = months * monthlyH;
+      const buyCloseCost = purchase * buyClose;
+      const sellCloseCost= arv * (sellClose + agentPct);
+      const totalHC      = holdingCost + buyCloseCost + sellCloseCost;
+
+      // ----- FINANCING -----
+      const downPct     = val('down-pct') / 100;
+      const ratePct     = val('rate-pct') / 100;
+      const loanMonths  = val('loan-months') || months;
+
+      let downDollar    = 0;
+      let interestCost  = 0;
+
+      if (financingMode === 'financed' && purchase > 0) {
+        downDollar   = purchase * downPct;
+        const loanAmt = purchase - downDollar;
+        interestCost  = loanAmt * (ratePct / 12) * loanMonths;
+      }
+
+      // ----- TOTALS -----
+      const totalInvestment = purchase + totalReno + totalHC + interestCost;
+      const profit           = arv - totalInvestment;
+      const roi              = totalInvestment > 0 ? (profit / totalInvestment) * 100 : 0;
+      const mao              = (arv * 0.70) - totalReno;
+
+      // Cash-on-Cash
+      let coc = null;
+      let cocDisplay = '—';
+      if (financingMode === 'financed' && downDollar > 0) {
+        coc = (profit / downDollar) * 100;
+        cocDisplay = fmtPct(coc);
+      }
+
+      // ----- UPDATE RENOVATION TOTAL -----
+      setEl('total-reno', fmt$(totalReno));
+
+      // ----- UPDATE H&C TOTAL -----
+      setEl('total-hc', fmt$(totalHC));
+
+      // ----- UPDATE FINANCING OUTPUTS -----
+      setEl('down-dollar', fmt$(downDollar));
+      setEl('interest-cost', fmt$(interestCost));
+
+      // ----- UPDATE SUMMARY -----
+      setEl('sum-purchase', fmt$(purchase));
+      setEl('sum-reno', fmt$(totalReno));
+      setEl('sum-hc', fmt$(totalHC));
+      setEl('sum-interest', fmt$(interestCost));
+      setEl('sum-total', fmt$(totalInvestment));
+      setEl('sum-arv', fmt$(arv));
+
+      const profitEl = document.getElementById('sum-profit');
+      profitEl.textContent = fmt$(profit);
+      setClass('sum-profit', profit >= 0 ? 'positive' : 'negative');
+
+      const roiEl = document.getElementById('sum-roi');
+      roiEl.textContent = fmtPct(roi);
+      setClass('sum-roi', roi >= 20 ? 'positive' : roi >= 10 ? 'highlight' : 'negative');
+
+      const cocEl = document.getElementById('sum-coc');
+      cocEl.textContent = cocDisplay;
+      if (coc !== null) setClass('sum-coc', coc >= 20 ? 'positive' : coc >= 10 ? 'highlight' : 'negative');
+
+      // ----- UPDATE MAO -----
+      setEl('mao-value', fmt$(mao));
+
+      // ----- UPDATE STICKY HEADER -----
+      const hProfit = document.getElementById('hdr-profit');
+      hProfit.textContent = arv > 0 ? fmt$(profit) : '—';
+      setClass('hdr-profit', arv > 0 ? (profit >= 0 ? 'positive' : 'negative') : 'neutral');
+
+      const hRoi = document.getElementById('hdr-roi');
+      hRoi.textContent = arv > 0 ? fmtPct(roi) : '—';
+      setClass('hdr-roi', arv > 0 ? (roi >= 20 ? 'positive' : roi >= 10 ? 'neutral' : 'negative') : 'neutral');
+
+      const hCoc = document.getElementById('hdr-coc');
+      const hCocSub = document.getElementById('hdr-coc-sub');
+      if (financingMode === 'financed' && coc !== null) {
+        hCoc.textContent = fmtPct(coc);
+        hCocSub.textContent = 'financed';
+        setClass('hdr-coc', coc >= 20 ? 'positive' : coc >= 10 ? 'neutral' : 'negative');
+      } else {
+        hCoc.textContent = arv > 0 ? fmtPct(roi) : '—';
+        hCocSub.textContent = arv > 0 ? 'cash deal' : '';
+        setClass('hdr-coc', arv > 0 ? (roi >= 20 ? 'positive' : roi >= 10 ? 'neutral' : 'negative') : 'neutral');
+      }
+
+      const hMao = document.getElementById('hdr-mao');
+      hMao.textContent = arv > 0 ? fmt$(mao) : '—';
+      setClass('hdr-mao', arv > 0 ? (purchase <= mao ? 'positive' : 'negative') : 'neutral');
+
+      // ----- VERDICT -----
+      const pill = document.getElementById('verdict-pill');
+      const pillText = document.getElementById('verdict-text');
+
+      if (arv === 0 || purchase === 0) {
+        pill.className = 'empty';
+        pillText.textContent = 'Enter numbers to see your verdict';
+      } else if (roi >= 20 && profit > 0) {
+        pill.className = 'go';
+        pillText.textContent = `GO — ${fmtPct(roi)} ROI · ${fmt$(profit)} profit`;
+      } else if (roi >= 10) {
+        pill.className = 'caution';
+        pillText.textContent = `CAUTION — ${fmtPct(roi)} ROI · Watch your margins`;
+      } else {
+        pill.className = 'nogo';
+        pillText.textContent = `NO-GO — ${fmtPct(roi)} ROI · Deal doesn't pencil`;
+      }
+    }
+
+    // Run once on load to initialize outputs
+    calculate();
+  </script>
+
+</body>
+</html>
