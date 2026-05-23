@@ -9,27 +9,46 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     /* ============================================================
-       BRAND DESIGN SYSTEM — TheOperationalSoul
-       Colors, typography, and spacing tokens
+       DESIGN SYSTEM — Dark mode default, light mode optional
     ============================================================ */
     :root {
-      --navy:      #1E1B4B;
-      --violet:    #7C3AED;
-      --indigo:    #4338CA;
-      --lav-input: #F5F3FF;
-      --lav-sec:   #EDE9FE;
-      --lav-bg:    #F0EFFA;
-      --green:     #16A34A;
-      --green-bg:  #DCFCE7;
-      --amber:     #D97706;
-      --amber-bg:  #FEF3C7;
-      --red:       #DC2626;
-      --red-bg:    #FEE2E2;
-      --gray:      #6B7280;
-      --border:    #E5E7EB;
-      --white:     #FFFFFF;
-
+      --bg:        #1E1B4B;
+      --surface:   #252060;
+      --border:    #3D3880;
+      --text:      #E8E5FF;
+      --muted:     #9F8FC7;
+      --hint:      #7C6DAB;
+      --accent:    #7C3AED;
+      --accent2:   #4338CA;
+      --ibg:       #1A1750;
+      --iborder:   #7C3AED;
+      --pos:       #4ADE80;
+      --neg:       #F87171;
+      --warn:      #FBBF24;
+      --pos-bg:    rgba(74,222,128,0.15);
+      --neg-bg:    rgba(248,113,113,0.15);
+      --warn-bg:   rgba(251,191,36,0.15);
+      --sub-bg:    #2A2570;
       --radius:    10px;
+      --card-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+
+    .light {
+      --bg:        #F0EFFA;
+      --surface:   #FFFFFF;
+      --border:    #E5E7EB;
+      --text:      #1E1B4B;
+      --muted:     #6B7280;
+      --hint:      #9CA3AF;
+      --ibg:       #F5F3FF;
+      --iborder:   #7C3AED;
+      --pos:       #16A34A;
+      --neg:       #DC2626;
+      --warn:      #D97706;
+      --pos-bg:    #DCFCE7;
+      --neg-bg:    #FEE2E2;
+      --warn-bg:   #FEF3C7;
+      --sub-bg:    #EDE9FE;
       --card-shadow: 0 1px 4px rgba(30,27,75,0.08);
     }
 
@@ -37,11 +56,12 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--lav-bg);
-      color: var(--navy);
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      padding-top: 220px;
+      padding-top: 222px;
       padding-bottom: 48px;
+      transition: background 0.2s, color 0.2s;
     }
 
     /* ============================================================
@@ -49,40 +69,58 @@
     ============================================================ */
     #sticky-header {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 100;
-      background: var(--navy);
-      box-shadow: 0 2px 12px rgba(30,27,75,0.25);
+      background: #1E1B4B;
+      border-bottom: 2px solid #7C3AED;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.35);
     }
 
+    /* Brand row — matches rental analyzer header */
     .header-brand {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 16px 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 16px 9px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
-    .brand-name {
-      font-size: 11px;
+    .header-brand-left { line-height: 1.3; }
+
+    .brand-tool {
+      font-size: 14px;
       font-weight: 700;
-      letter-spacing: 0.08em;
-      color: rgba(255,255,255,0.55);
-      text-transform: uppercase;
+      color: #C4B5FD;
     }
 
-    .tool-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.85);
+    .brand-sub {
+      font-size: 11px;
+      color: #7C6DAB;
+      margin-top: 1px;
     }
 
+    .mode-btn {
+      background: #2D2867;
+      border: 1px solid #4338CA;
+      border-radius: 20px;
+      padding: 5px 13px;
+      color: #C4B5FD;
+      font-size: .75rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .light .mode-btn {
+      background: #EDE9FE;
+      border-color: #7C3AED;
+      color: #4338CA;
+    }
+
+    /* Verdict pill */
     .verdict-wrap {
       display: flex;
       justify-content: center;
-      padding: 8px 16px 6px;
+      padding: 7px 16px 6px;
     }
 
     #verdict-pill {
@@ -97,10 +135,10 @@
       transition: background 0.25s, color 0.25s;
     }
 
-    #verdict-pill.go      { background: var(--green-bg); color: var(--green); }
-    #verdict-pill.caution { background: var(--amber-bg); color: var(--amber); }
-    #verdict-pill.nogo    { background: var(--red-bg);   color: var(--red); }
-    #verdict-pill.empty   { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+    #verdict-pill.go      { background: var(--pos-bg);  color: var(--pos);  }
+    #verdict-pill.caution { background: var(--warn-bg); color: var(--warn); }
+    #verdict-pill.nogo    { background: var(--neg-bg);  color: var(--neg);  }
+    #verdict-pill.empty   { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.35); }
 
     .verdict-dot {
       width: 8px; height: 8px;
@@ -108,16 +146,17 @@
       background: currentColor;
     }
 
+    /* Metric cards row */
     .metric-cards {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
-      background: rgba(255,255,255,0.1);
-      border-top: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.08);
+      border-top: 1px solid rgba(255,255,255,0.08);
     }
 
     .metric-card {
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.04);
       padding: 9px 10px 10px;
       text-align: center;
     }
@@ -127,25 +166,25 @@
       font-weight: 600;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.4);
       margin-bottom: 3px;
     }
 
     .metric-value {
       font-size: 17px;
       font-weight: 800;
-      color: var(--white);
+      color: #E8E5FF;
       line-height: 1.1;
       transition: color 0.2s;
     }
 
-    .metric-value.positive { color: #6EE7B7; }
-    .metric-value.negative { color: #FCA5A5; }
-    .metric-value.neutral  { color: var(--white); }
+    .metric-value.positive { color: #4ADE80; }
+    .metric-value.negative { color: #F87171; }
+    .metric-value.neutral  { color: #E8E5FF; }
 
     .metric-sub {
       font-size: 9px;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.3);
       margin-top: 2px;
     }
 
@@ -162,15 +201,17 @@
        SECTION CARDS
     ============================================================ */
     .section-card {
-      background: var(--white);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--card-shadow);
       margin-bottom: 14px;
       overflow: hidden;
     }
 
+    /* Indigo header — matches rental analyzer section headers */
     .section-header {
-      background: var(--navy);
+      background: #4338CA;
       padding: 11px 16px;
     }
 
@@ -179,12 +220,12 @@
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--white);
+      color: #fff;
     }
 
     .section-header p {
       font-size: 10px;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.6);
       margin-top: 2px;
     }
 
@@ -200,7 +241,7 @@
       display: block;
       font-size: 11px;
       font-weight: 600;
-      color: var(--gray);
+      color: var(--muted);
       margin-bottom: 4px;
       letter-spacing: 0.02em;
     }
@@ -216,7 +257,7 @@
       position: absolute;
       font-size: 13px;
       font-weight: 500;
-      color: var(--indigo);
+      color: var(--accent);
       pointer-events: none;
       user-select: none;
     }
@@ -232,10 +273,10 @@
       font-family: 'Inter', sans-serif;
       font-size: 14px;
       font-weight: 500;
-      color: var(--navy);
-      background: var(--lav-input);
+      color: var(--text);
+      background: var(--ibg);
       outline: none;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, background 0.15s;
       -moz-appearance: textfield;
     }
 
@@ -243,14 +284,13 @@
     .input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
 
     .input-wrap input:focus {
-      border-color: var(--violet);
-      background: var(--white);
+      border-color: #C4B5FD;
+      box-shadow: 0 0 0 2px rgba(124,58,237,0.25);
     }
 
     .input-wrap.has-prefix input { padding-left: 26px; }
     .input-wrap.has-suffix input { padding-right: 30px; }
-
-    .input-wrap input[type="text"] { font-size: 14px; }
+    .input-wrap input[type="text"] { font-size: 13px; }
 
     .fields-2col {
       display: grid;
@@ -261,22 +301,13 @@
     /* ============================================================
        RENOVATION LINE ITEMS
     ============================================================ */
-    .reno-items {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .reno-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .reno-items { display: flex; flex-direction: column; gap: 8px; }
+    .reno-item  { display: flex; align-items: center; gap: 10px; }
 
     .reno-item-label {
       font-size: 12px;
       font-weight: 500;
-      color: var(--navy);
+      color: var(--text);
       flex: 1;
       min-width: 0;
     }
@@ -288,7 +319,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 12px;
-      background: var(--lav-sec);
+      background: var(--sub-bg);
       border-radius: 7px;
       margin-top: 12px;
     }
@@ -296,7 +327,7 @@
     .total-row-label {
       font-size: 11px;
       font-weight: 700;
-      color: var(--indigo);
+      color: #A5B4FC;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -304,13 +335,13 @@
     .total-row-value {
       font-size: 15px;
       font-weight: 800;
-      color: var(--navy);
+      color: var(--text);
     }
 
     /* ============================================================
        DEAL SUMMARY
     ============================================================ */
-    .summary-rows { display: flex; flex-direction: column; gap: 0; }
+    .summary-rows { display: flex; flex-direction: column; }
 
     .summary-row {
       display: flex;
@@ -322,21 +353,26 @@
 
     .summary-row:last-child { border-bottom: none; }
 
-    .summary-row-label { font-size: 12px; font-weight: 500; color: var(--gray); }
+    .summary-row-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+    }
 
     .summary-row-value {
       font-size: 13px;
       font-weight: 700;
-      color: var(--navy);
+      color: var(--text);
     }
 
-    .summary-row-value.positive  { color: var(--green); }
-    .summary-row-value.negative  { color: var(--red); }
-    .summary-row-value.highlight { color: var(--violet); }
+    .summary-row-value.positive  { color: var(--pos);    }
+    .summary-row-value.negative  { color: var(--neg);    }
+    .summary-row-value.highlight { color: var(--accent); }
 
+    /* MAO callout */
     .mao-callout {
-      background: var(--lav-sec);
-      border-left: 3px solid var(--violet);
+      background: var(--sub-bg);
+      border-left: 3px solid var(--accent);
       border-radius: 7px;
       padding: 12px 14px;
       margin-top: 14px;
@@ -347,19 +383,28 @@
       font-weight: 700;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: var(--gray);
+      color: var(--muted);
       margin-bottom: 4px;
     }
 
-    .mao-callout-value { font-size: 22px; font-weight: 800; color: var(--navy); }
-    .mao-callout-sub   { font-size: 10px; color: var(--gray); margin-top: 3px; }
+    .mao-callout-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .mao-callout-sub {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
 
     /* ============================================================
        TOGGLE (Cash vs Financed)
     ============================================================ */
     .toggle-group {
       display: flex;
-      background: var(--lav-sec);
+      background: var(--sub-bg);
       border-radius: 8px;
       padding: 3px;
       margin-bottom: 14px;
@@ -374,12 +419,15 @@
       font-family: 'Inter', sans-serif;
       font-size: 12px;
       font-weight: 600;
-      color: var(--gray);
+      color: var(--muted);
       cursor: pointer;
       transition: background 0.15s, color 0.15s;
     }
 
-    .toggle-btn.active { background: var(--navy); color: var(--white); }
+    .toggle-btn.active {
+      background: #4338CA;
+      color: #fff;
+    }
 
     .financing-fields { display: none; }
     .financing-fields.visible { display: block; }
@@ -391,16 +439,20 @@
       text-align: center;
       padding: 20px 16px 0;
       font-size: 10px;
-      color: var(--gray);
+      color: var(--hint);
     }
 
-    .page-footer a { color: var(--violet); text-decoration: none; font-weight: 600; }
+    .page-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
 
     /* ============================================================
        RESPONSIVE
     ============================================================ */
     @media (max-width: 380px) {
-      body { padding-top: 230px; }
+      body { padding-top: 232px; }
       .metric-value { font-size: 14px; }
       .metric-label { font-size: 8px; }
       .reno-item .input-wrap { width: 120px; }
@@ -415,8 +467,11 @@
   <div id="sticky-header">
 
     <div class="header-brand">
-      <span class="brand-name">TheOperationalSoul</span>
-      <span class="tool-name">Property Flip Deal Analyzer</span>
+      <div class="header-brand-left">
+        <div class="brand-tool">Property Flip Deal Analyzer</div>
+        <div class="brand-sub">TheOperationalSoul.com</div>
+      </div>
+      <button class="mode-btn" id="modeBtn" onclick="toggleMode()">☀️ Light mode</button>
     </div>
 
     <div class="verdict-wrap">
@@ -454,252 +509,131 @@
   ============================================================ -->
   <div class="page-inner">
 
-    <!-- ── SECTION 1: PROPERTY DETAILS ── -->
+    <!-- SECTION 1: PROPERTY DETAILS -->
     <div class="section-card">
       <div class="section-header">
         <h2>Property Details</h2>
         <p>Start with the address, ARV, and your target purchase price</p>
       </div>
       <div class="section-body">
-
         <div class="field">
           <label>Property Address (optional)</label>
           <div class="input-wrap">
-            <input type="text" id="address" placeholder="123 Main St, City, State" autocomplete="off" />
+            <input type="text" id="address" placeholder="123 Main St, City, State" />
           </div>
         </div>
-
         <div class="fields-2col">
           <div class="field">
             <label>After Repair Value (ARV)</label>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" id="arv" placeholder="0" autocomplete="off"
-                     oninput="fmtDollar(this); calculate()" />
+              <input type="number" id="arv" placeholder="0" min="0" oninput="calculate()" />
             </div>
           </div>
           <div class="field">
             <label>Purchase Price</label>
             <div class="input-wrap has-prefix">
               <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" id="purchase" placeholder="0" autocomplete="off"
-                     oninput="fmtDollar(this); calculate()" />
+              <input type="number" id="purchase" placeholder="0" min="0" oninput="calculate()" />
             </div>
           </div>
         </div>
-
       </div>
-    </div><!-- /section-card -->
+    </div>
 
-
-    <!-- ── SECTION 2: RENOVATION COSTS ── -->
+    <!-- SECTION 2: RENOVATION COSTS -->
     <div class="section-card">
       <div class="section-header">
         <h2>Renovation Costs</h2>
         <p>Enter your estimated cost for each category (leave blank if not applicable)</p>
       </div>
       <div class="section-body">
-
         <div class="reno-items">
-          <div class="reno-item">
-            <span class="reno-item-label">Demo &amp; Cleanup</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Roof</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">HVAC</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Plumbing</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Electrical</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Windows &amp; Doors</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Kitchen</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Bathrooms</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Flooring</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Paint &amp; Finishes</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Landscaping</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
-          <div class="reno-item">
-            <span class="reno-item-label">Other / Contingency</span>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" class="reno" placeholder="0" autocomplete="off" oninput="fmtDollar(this); calculate()" />
-            </div>
-          </div>
+          <div class="reno-item"><span class="reno-item-label">Demo &amp; Cleanup</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Roof</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">HVAC</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Plumbing</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Electrical</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Windows &amp; Doors</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Kitchen</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Bathrooms</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Flooring</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Paint &amp; Finishes</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Landscaping</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
+          <div class="reno-item"><span class="reno-item-label">Other / Contingency</span><div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" class="reno" placeholder="0" min="0" oninput="calculate()" /></div></div>
         </div>
-
         <div class="total-row">
           <span class="total-row-label">Total Renovation</span>
           <span class="total-row-value" id="total-reno">$0</span>
         </div>
-
       </div>
-    </div><!-- /section-card -->
+    </div>
 
-
-    <!-- ── SECTION 3: HOLDING & CLOSING COSTS ── -->
+    <!-- SECTION 3: HOLDING & CLOSING COSTS -->
     <div class="section-card">
       <div class="section-header">
         <h2>Holding &amp; Closing Costs</h2>
         <p>Costs you carry while holding the property plus transaction fees</p>
       </div>
       <div class="section-body">
-
         <div class="fields-2col">
           <div class="field">
             <label>Months to Hold</label>
-            <div class="input-wrap">
-              <!-- Pre-filled with 6 — typical flip timeline -->
-              <input type="number" id="months" value="6" min="0" oninput="calculate()" />
-            </div>
+            <div class="input-wrap"><input type="number" id="months" placeholder="6" min="0" oninput="calculate()" /></div>
           </div>
           <div class="field">
             <label>Monthly Holding Costs</label>
-            <div class="input-wrap has-prefix">
-              <span class="input-prefix">$</span>
-              <input type="text" inputmode="numeric" id="monthly-hold" placeholder="0" autocomplete="off"
-                     oninput="fmtDollar(this); calculate()" />
-            </div>
+            <div class="input-wrap has-prefix"><span class="input-prefix">$</span><input type="number" id="monthly-hold" placeholder="0" min="0" oninput="calculate()" /></div>
           </div>
         </div>
-
         <div class="fields-2col">
           <div class="field">
             <label>Purchase Closing Costs</label>
-            <div class="input-wrap has-suffix">
-              <!-- Pre-filled with typical 2% -->
-              <input type="number" id="buy-close-pct" value="2" min="0" max="100" step="0.1" oninput="calculate()" />
-              <span class="input-suffix">%</span>
-            </div>
+            <div class="input-wrap has-suffix"><input type="number" id="buy-close-pct" placeholder="2" min="0" max="100" step="0.1" oninput="calculate()" /><span class="input-suffix">%</span></div>
           </div>
           <div class="field">
             <label>Sale Closing Costs</label>
-            <div class="input-wrap has-suffix">
-              <!-- Pre-filled with typical 2% -->
-              <input type="number" id="sell-close-pct" value="2" min="0" max="100" step="0.1" oninput="calculate()" />
-              <span class="input-suffix">%</span>
-            </div>
+            <div class="input-wrap has-suffix"><input type="number" id="sell-close-pct" placeholder="2" min="0" max="100" step="0.1" oninput="calculate()" /><span class="input-suffix">%</span></div>
           </div>
         </div>
-
         <div class="field">
           <label>Agent Commission (on sale)</label>
-          <div class="input-wrap has-suffix">
-            <!-- Pre-filled with typical 5% -->
-            <input type="number" id="agent-pct" value="5" min="0" max="100" step="0.1" oninput="calculate()" />
-            <span class="input-suffix">%</span>
-          </div>
+          <div class="input-wrap has-suffix"><input type="number" id="agent-pct" placeholder="5" min="0" max="100" step="0.1" oninput="calculate()" /><span class="input-suffix">%</span></div>
         </div>
-
         <div class="total-row">
           <span class="total-row-label">Total Holding &amp; Closing</span>
           <span class="total-row-value" id="total-hc">$0</span>
         </div>
-
       </div>
-    </div><!-- /section-card -->
+    </div>
 
-
-    <!-- ── SECTION 4: FINANCING ── -->
+    <!-- SECTION 4: FINANCING -->
     <div class="section-card">
       <div class="section-header">
         <h2>Financing</h2>
         <p>Cash deals skip interest — financed deals calculate Cash-on-Cash return</p>
       </div>
       <div class="section-body">
-
         <div class="toggle-group">
           <button class="toggle-btn active" id="btn-cash" onclick="setFinancing('cash')">Cash Deal</button>
           <button class="toggle-btn" id="btn-financed" onclick="setFinancing('financed')">Financed</button>
         </div>
-
         <div class="financing-fields" id="financing-fields">
           <div class="fields-2col">
             <div class="field">
               <label>Down Payment</label>
-              <div class="input-wrap has-suffix">
-                <!-- Pre-filled with typical 20% hard money down -->
-                <input type="number" id="down-pct" value="20" min="0" max="100" step="0.5" oninput="calculate()" />
-                <span class="input-suffix">%</span>
-              </div>
+              <div class="input-wrap has-suffix"><input type="number" id="down-pct" placeholder="20" min="0" max="100" step="0.5" oninput="calculate()" /><span class="input-suffix">%</span></div>
             </div>
             <div class="field">
               <label>Interest Rate (annual)</label>
-              <div class="input-wrap has-suffix">
-                <!-- Pre-filled with typical 10% hard money rate -->
-                <input type="number" id="rate-pct" value="10" min="0" max="100" step="0.1" oninput="calculate()" />
-                <span class="input-suffix">%</span>
-              </div>
+              <div class="input-wrap has-suffix"><input type="number" id="rate-pct" placeholder="10" min="0" max="100" step="0.1" oninput="calculate()" /><span class="input-suffix">%</span></div>
             </div>
           </div>
           <div class="field">
             <label>Loan Term (months held)</label>
-            <div class="input-wrap">
-              <!-- Pre-filled to match Months to Hold default -->
-              <input type="number" id="loan-months" value="6" min="0" oninput="calculate()" />
-            </div>
+            <div class="input-wrap"><input type="number" id="loan-months" placeholder="6" min="0" oninput="calculate()" /></div>
           </div>
         </div>
-
         <div id="coc-output" style="display:none;">
           <div class="total-row">
             <span class="total-row-label">Down Payment Amount</span>
@@ -710,67 +644,37 @@
             <span class="total-row-value" id="interest-cost">$0</span>
           </div>
         </div>
-
       </div>
-    </div><!-- /section-card -->
+    </div>
 
-
-    <!-- ── SECTION 5: DEAL SUMMARY ── -->
+    <!-- SECTION 5: DEAL SUMMARY -->
     <div class="section-card">
       <div class="section-header">
         <h2>Deal Summary</h2>
         <p>All-in cost breakdown and key metrics</p>
       </div>
       <div class="section-body">
-
         <div class="summary-rows">
-          <div class="summary-row">
-            <span class="summary-row-label">Purchase Price</span>
-            <span class="summary-row-value" id="sum-purchase">$0</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-row-label">Renovation Costs</span>
-            <span class="summary-row-value" id="sum-reno">$0</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-row-label">Holding &amp; Closing Costs</span>
-            <span class="summary-row-value" id="sum-hc">$0</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-row-label">Interest Costs</span>
-            <span class="summary-row-value" id="sum-interest">$0</span>
-          </div>
-          <div class="summary-row" style="border-bottom:2px solid var(--navy); padding-bottom:12px; margin-bottom:2px;">
-            <span class="summary-row-label" style="font-weight:700; color:var(--navy);">Total All-In Cost</span>
+          <div class="summary-row"><span class="summary-row-label">Purchase Price</span><span class="summary-row-value" id="sum-purchase">$0</span></div>
+          <div class="summary-row"><span class="summary-row-label">Renovation Costs</span><span class="summary-row-value" id="sum-reno">$0</span></div>
+          <div class="summary-row"><span class="summary-row-label">Holding &amp; Closing Costs</span><span class="summary-row-value" id="sum-hc">$0</span></div>
+          <div class="summary-row"><span class="summary-row-label">Interest Costs</span><span class="summary-row-value" id="sum-interest">$0</span></div>
+          <div class="summary-row" style="border-bottom:2px solid #4338CA; padding-bottom:12px; margin-bottom:2px;">
+            <span class="summary-row-label" style="font-weight:700; color:var(--text);">Total All-In Cost</span>
             <span class="summary-row-value" id="sum-total" style="font-size:15px;">$0</span>
           </div>
-          <div class="summary-row">
-            <span class="summary-row-label">Sale Price (ARV)</span>
-            <span class="summary-row-value" id="sum-arv">$0</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-row-label">Net Profit</span>
-            <span class="summary-row-value" id="sum-profit">$0</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-row-label">ROI</span>
-            <span class="summary-row-value" id="sum-roi">0.0%</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-row-label">Cash-on-Cash Return</span>
-            <span class="summary-row-value" id="sum-coc">—</span>
-          </div>
+          <div class="summary-row"><span class="summary-row-label">Sale Price (ARV)</span><span class="summary-row-value" id="sum-arv">$0</span></div>
+          <div class="summary-row"><span class="summary-row-label">Net Profit</span><span class="summary-row-value" id="sum-profit">$0</span></div>
+          <div class="summary-row"><span class="summary-row-label">ROI</span><span class="summary-row-value" id="sum-roi">0.0%</span></div>
+          <div class="summary-row"><span class="summary-row-label">Cash-on-Cash Return</span><span class="summary-row-value" id="sum-coc">—</span></div>
         </div>
-
         <div class="mao-callout">
           <div class="mao-callout-label">Maximum Allowable Offer (70% Rule)</div>
           <div class="mao-callout-value" id="mao-value">$0</div>
-          <div class="mao-callout-sub">= (ARV × 70%) − Total Renovation</div>
+          <div class="mao-callout-sub">= (ARV x 70%) minus Total Renovation</div>
         </div>
-
       </div>
-    </div><!-- /section-card -->
-
+    </div>
 
     <div class="page-footer">
       Built by <a href="https://www.etsy.com/shop/TheOperationalSoul" target="_blank">TheOperationalSoul</a> &nbsp;·&nbsp;
@@ -781,28 +685,18 @@
 
 
   <!-- ============================================================
-       JAVASCRIPT — CALCULATIONS
+       JAVASCRIPT
   ============================================================ -->
   <script>
-    // ── State ──
     let financingMode = 'cash';
+    let dark = true;
 
-    // ── Comma formatter for dollar inputs ──
-    // Strips non-digits, reformats with commas while preserving cursor position
-    function fmtDollar(el) {
-      const pos    = el.selectionStart;
-      const before = el.value.length;
-      // Remove everything except digits
-      const digits = el.value.replace(/[^0-9]/g, '');
-      if (digits === '') { el.value = ''; return; }
-      const formatted = parseInt(digits, 10).toLocaleString('en-US');
-      el.value = formatted;
-      // Adjust cursor for added/removed commas
-      const diff = formatted.length - before;
-      try { el.setSelectionRange(pos + diff, pos + diff); } catch(e) {}
+    function toggleMode() {
+      dark = !dark;
+      document.body.classList.toggle('light', !dark);
+      document.getElementById('modeBtn').textContent = dark ? '☀️ Light mode' : '🌙 Dark mode';
     }
 
-    // ── Financing toggle ──
     function setFinancing(mode) {
       financingMode = mode;
       document.getElementById('btn-cash').classList.toggle('active', mode === 'cash');
@@ -812,37 +706,23 @@
       calculate();
     }
 
-    // ── Helpers ──
-    // Read a numeric value from an input (handles commas in text inputs)
     function val(id) {
-      const el = document.getElementById(id);
-      if (!el) return 0;
-      const raw = el.value.replace(/,/g, '');
-      const v = parseFloat(raw);
-      return isNaN(v) ? 0 : v;
-    }
-
-    // Read a numeric value from an element directly (for .reno class inputs)
-    function valEl(el) {
-      const raw = el.value.replace(/,/g, '');
-      const v = parseFloat(raw);
+      const v = parseFloat(document.getElementById(id).value);
       return isNaN(v) ? 0 : v;
     }
 
     function fmt$(n) {
       if (n === 0) return '$0';
       const abs = Math.abs(n);
-      const s = '$' + Math.round(abs).toLocaleString('en-US');
-      return n < 0 ? '−' + s : s;
+      const s = abs >= 1000 ? '$' + Math.round(abs).toLocaleString() : '$' + abs.toFixed(0);
+      return n < 0 ? '-' + s : s;
     }
 
     function fmtPct(n) {
-      return (n >= 0 ? '' : '−') + Math.abs(n).toFixed(1) + '%';
+      return (n >= 0 ? '' : '-') + Math.abs(n).toFixed(1) + '%';
     }
 
-    function setEl(id, text) {
-      document.getElementById(id).textContent = text;
-    }
+    function setEl(id, text) { document.getElementById(id).textContent = text; }
 
     function setClass(id, cls) {
       const el = document.getElementById(id);
@@ -850,33 +730,24 @@
       if (cls) el.classList.add(cls);
     }
 
-    // ── Main calculation ──
     function calculate() {
+      const arv       = val('arv');
+      const purchase  = val('purchase');
+      const months    = val('months') || 0;
+      const monthlyH  = val('monthly-hold');
+      const buyClose  = val('buy-close-pct') / 100;
+      const sellClose = val('sell-close-pct') / 100;
+      const agentPct  = val('agent-pct') / 100;
 
-      // ----- INPUTS -----
-      const arv      = val('arv');
-      const purchase = val('purchase');
-      const months   = val('months') || 0;
-      const monthlyH = val('monthly-hold');
-      const buyClose = val('buy-close-pct') / 100;
-      const sellClose= val('sell-close-pct') / 100;
-      const agentPct = val('agent-pct') / 100;
-
-      // Reno line items
       const renoInputs = document.querySelectorAll('.reno');
       let totalReno = 0;
-      renoInputs.forEach(inp => {
-        const v = valEl(inp);
-        if (v > 0) totalReno += v;
-      });
+      renoInputs.forEach(inp => { const v = parseFloat(inp.value); if (!isNaN(v) && v > 0) totalReno += v; });
 
-      // ----- HOLDING & CLOSING -----
       const holdingCost   = months * monthlyH;
       const buyCloseCost  = purchase * buyClose;
       const sellCloseCost = arv * (sellClose + agentPct);
       const totalHC       = holdingCost + buyCloseCost + sellCloseCost;
 
-      // ----- FINANCING -----
       const downPct    = val('down-pct') / 100;
       const ratePct    = val('rate-pct') / 100;
       const loanMonths = val('loan-months') || months;
@@ -890,13 +761,11 @@
         interestCost  = loanAmt * (ratePct / 12) * loanMonths;
       }
 
-      // ----- TOTALS -----
       const totalInvestment = purchase + totalReno + totalHC + interestCost;
       const profit           = arv - totalInvestment;
       const roi              = totalInvestment > 0 ? (profit / totalInvestment) * 100 : 0;
       const mao              = (arv * 0.70) - totalReno;
 
-      // Cash-on-Cash
       let coc = null;
       let cocDisplay = '—';
       if (financingMode === 'financed' && downDollar > 0) {
@@ -904,23 +773,16 @@
         cocDisplay = fmtPct(coc);
       }
 
-      // ----- UPDATE RENOVATION TOTAL -----
-      setEl('total-reno', fmt$(totalReno));
-
-      // ----- UPDATE H&C TOTAL -----
-      setEl('total-hc', fmt$(totalHC));
-
-      // ----- UPDATE FINANCING OUTPUTS -----
-      setEl('down-dollar', fmt$(downDollar));
+      setEl('total-reno',    fmt$(totalReno));
+      setEl('total-hc',      fmt$(totalHC));
+      setEl('down-dollar',   fmt$(downDollar));
       setEl('interest-cost', fmt$(interestCost));
-
-      // ----- UPDATE SUMMARY -----
-      setEl('sum-purchase', fmt$(purchase));
-      setEl('sum-reno', fmt$(totalReno));
-      setEl('sum-hc', fmt$(totalHC));
-      setEl('sum-interest', fmt$(interestCost));
-      setEl('sum-total', fmt$(totalInvestment));
-      setEl('sum-arv', fmt$(arv));
+      setEl('sum-purchase',  fmt$(purchase));
+      setEl('sum-reno',      fmt$(totalReno));
+      setEl('sum-hc',        fmt$(totalHC));
+      setEl('sum-interest',  fmt$(interestCost));
+      setEl('sum-total',     fmt$(totalInvestment));
+      setEl('sum-arv',       fmt$(arv));
 
       const profitEl = document.getElementById('sum-profit');
       profitEl.textContent = fmt$(profit);
@@ -934,10 +796,8 @@
       cocEl.textContent = cocDisplay;
       if (coc !== null) setClass('sum-coc', coc >= 20 ? 'positive' : coc >= 10 ? 'highlight' : 'negative');
 
-      // ----- UPDATE MAO -----
       setEl('mao-value', fmt$(mao));
 
-      // ----- UPDATE STICKY HEADER -----
       const hProfit = document.getElementById('hdr-profit');
       hProfit.textContent = arv > 0 ? fmt$(profit) : '—';
       setClass('hdr-profit', arv > 0 ? (profit >= 0 ? 'positive' : 'negative') : 'neutral');
@@ -949,11 +809,11 @@
       const hCoc    = document.getElementById('hdr-coc');
       const hCocSub = document.getElementById('hdr-coc-sub');
       if (financingMode === 'financed' && coc !== null) {
-        hCoc.textContent = fmtPct(coc);
+        hCoc.textContent    = fmtPct(coc);
         hCocSub.textContent = 'financed';
         setClass('hdr-coc', coc >= 20 ? 'positive' : coc >= 10 ? 'neutral' : 'negative');
       } else {
-        hCoc.textContent = arv > 0 ? fmtPct(roi) : '—';
+        hCoc.textContent    = arv > 0 ? fmtPct(roi) : '—';
         hCocSub.textContent = arv > 0 ? 'cash deal' : '';
         setClass('hdr-coc', arv > 0 ? (roi >= 20 ? 'positive' : roi >= 10 ? 'neutral' : 'negative') : 'neutral');
       }
@@ -962,26 +822,24 @@
       hMao.textContent = arv > 0 ? fmt$(mao) : '—';
       setClass('hdr-mao', arv > 0 ? (purchase <= mao ? 'positive' : 'negative') : 'neutral');
 
-      // ----- VERDICT -----
       const pill     = document.getElementById('verdict-pill');
       const pillText = document.getElementById('verdict-text');
 
       if (arv === 0 || purchase === 0) {
-        pill.className = 'empty';
+        pill.className      = 'empty';
         pillText.textContent = 'Enter numbers to see your verdict';
       } else if (roi >= 20 && profit > 0) {
-        pill.className = 'go';
+        pill.className      = 'go';
         pillText.textContent = `GO — ${fmtPct(roi)} ROI · ${fmt$(profit)} profit`;
       } else if (roi >= 10) {
-        pill.className = 'caution';
+        pill.className      = 'caution';
         pillText.textContent = `CAUTION — ${fmtPct(roi)} ROI · Watch your margins`;
       } else {
-        pill.className = 'nogo';
+        pill.className      = 'nogo';
         pillText.textContent = `NO-GO — ${fmtPct(roi)} ROI · Deal doesn't pencil`;
       }
     }
 
-    // Run once on load to initialize outputs with pre-filled defaults
     calculate();
   </script>
 
