@@ -127,4 +127,267 @@ td.cun{color:var(--neg);}
   .fields-2col{display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem;}
   .fields-col .field:last-child{border-bottom:1px solid var(--border);}
 
-  /* Slightly more
+  /* Slightly more padding in projection table section */
+  #s-pt .sec-body{padding:.75rem 1rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-t">Rental Property Cash Flow Analyzer</div>
+    <div class="hdr-s">TheOperationalSoul.com</div>
+  </div>
+  <button class="mode-btn" id="modeBtn" onclick="toggleMode()">☀️ Light mode</button>
+</div>
+
+<div class="dash">
+  <div class="dash-lbl">Results Dashboard</div>
+  <div class="dash-inner">
+
+    <!-- HERO: monthly CF + annual CF (mobile: both shown; desktop: annual CF hidden, moves to mc-annual) -->
+    <div class="hero">
+      <div>
+        <div class="h-label">Monthly Cash Flow</div>
+        <div class="h-val" id="d-cf">$0.00</div>
+        <div class="h-note">Updates as you fill in inputs below</div>
+      </div>
+      <div class="h-right">
+        <div class="h-label">Annual Cash Flow</div>
+        <div class="h-ann" id="d-ann-mobile">$0</div>
+      </div>
+    </div>
+
+    <!-- METRICS (5 cards; on mobile: annual hidden, 4 in 2x2 grid; on desktop: all 5 in grid row) -->
+    <div class="metrics">
+      <div class="mc mc-annual">
+        <div class="mc-lbl">Annual Cash Flow</div>
+        <div class="mc-val" id="d-ann">$0</div>
+        <div class="mc-note">Monthly CF x 12</div>
+      </div>
+      <div class="mc">
+        <div class="mc-lbl">Cash-on-Cash Return</div>
+        <div class="mc-val" id="d-coc">—</div>
+        <div class="mc-note">Annual CF / Cash invested</div>
+      </div>
+      <div class="mc">
+        <div class="mc-lbl">Cap Rate</div>
+        <div class="mc-val" id="d-cap">—</div>
+        <div class="mc-note">Annual NOI / Purchase price</div>
+      </div>
+      <div class="mc">
+        <div class="mc-lbl">DSCR</div>
+        <div class="mc-val" id="d-dscr">—</div>
+        <div class="mc-note">1.25+ = lender approved</div>
+      </div>
+      <div class="mc">
+        <div class="mc-lbl">Est. Equity at Year 5</div>
+        <div class="mc-val purple" id="d-eq">—</div>
+        <div class="mc-note">Prop. value minus loan bal.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="main-layout">
+
+  <!-- ROW 1: Property | Financing | Income -->
+  <div class="card-row row-3">
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('prop')">
+        <div class="sec-hdr-l"><span>🏡</span> Property Details</div>
+        <span class="chev open" id="ch-prop">▼</span>
+      </div>
+      <div class="sec-body" id="prop">
+        <div class="field"><span class="f-lbl">Purchase Price</span><input type="number" id="purchase" value="300000" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Down Payment %</span><input type="number" id="down-pct" value="20" step=".5" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Down Payment $</span><span class="aval" id="down-dol">$60,000</span></div>
+        <div class="field"><span class="f-lbl">Closing Costs %</span><input type="number" id="close-pct" value="2" step=".5" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Closing Costs $</span><span class="aval" id="close-dol">$6,000</span></div>
+        <div class="field"><span class="f-lbl">Renovation Budget</span><input type="number" id="reno" value="0" oninput="calc()"></div>
+        <div class="tot"><span class="tot-lbl">TOTAL CASH NEEDED</span><span class="tot-val" id="total-cash">$66,000</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('fin')">
+        <div class="sec-hdr-l"><span>🏦</span> Financing</div>
+        <span class="chev open" id="ch-fin">▼</span>
+      </div>
+      <div class="sec-body" id="fin">
+        <div class="field"><span class="f-lbl auto">Loan Amount (auto)</span><span class="aval" id="loan-amt">$240,000</span></div>
+        <div class="field"><span class="f-lbl">Annual Interest Rate %</span><input type="number" id="rate" value="7" step=".125" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Loan Term (years)</span><input type="number" id="term" value="30" step="1" oninput="calc()"></div>
+        <div class="tot"><span class="tot-lbl">MONTHLY MORTGAGE (P&I)</span><span class="tot-val" id="mortgage">$0.00</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('inc')">
+        <div class="sec-hdr-l"><span>💰</span> Monthly Income</div>
+        <span class="chev open" id="ch-inc">▼</span>
+      </div>
+      <div class="sec-body" id="inc">
+        <div class="field"><span class="f-lbl">Monthly Rent</span><input type="number" id="rent" value="2000" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Other Monthly Income</span><input type="number" id="other-inc" value="0" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Vacancy Rate %</span><input type="number" id="vacancy" value="8" step=".5" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Vacancy Loss</span><span class="aval red" id="vac-loss">-$160</span></div>
+        <div class="field"><span class="f-lbl auto">Gross Monthly Income</span><span class="aval" id="gross-inc">$2,000</span></div>
+        <div class="tot"><span class="tot-lbl">EFFECTIVE GROSS INCOME (EGI)</span><span class="tot-val" id="egi">$1,840</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ROW 2: Expenses (2fr) | Growth Assumptions (1fr) -->
+  <div class="card-row row-2">
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('exp')">
+        <div class="sec-hdr-l"><span>📋</span> Monthly Expenses</div>
+        <span class="chev open" id="ch-exp">▼</span>
+      </div>
+      <div class="sec-body" id="exp">
+        <div class="fields-2col">
+          <div class="fields-col">
+            <div class="field"><span class="f-lbl">Property Tax /mo</span><input type="number" id="tax" value="250" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Insurance /mo</span><input type="number" id="insurance" value="100" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Management %<span class="badge">of rent</span></span><input type="number" id="mgmt-pct" value="10" step=".5" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl auto">↳ Management $</span><span class="aval" id="mgmt-dol">$200</span></div>
+            <div class="field"><span class="f-lbl">CapEx Reserves %<span class="badge">of rent</span></span><input type="number" id="capex-pct" value="5" step=".5" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl auto">↳ CapEx $</span><span class="aval" id="capex-dol">$100</span></div>
+          </div>
+          <div class="fields-col">
+            <div class="field"><span class="f-lbl">Maintenance %<span class="badge">of rent</span></span><input type="number" id="maint-pct" value="5" step=".5" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl auto">↳ Maintenance $</span><span class="aval" id="maint-dol">$100</span></div>
+            <div class="field"><span class="f-lbl">HOA /mo</span><input type="number" id="hoa" value="0" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Other / Utilities /mo</span><input type="number" id="other-exp" value="0" oninput="calc()"></div>
+          </div>
+        </div>
+        <div class="tot" style="margin-top:.25rem;"><span class="tot-lbl">TOTAL OPERATING EXPENSES</span><span class="tot-val" id="op-exp">$750</span></div>
+        <div class="tot"><span class="tot-lbl">TOTAL MONTHLY COSTS (incl. Mortgage)</span><span class="tot-val" id="tot-costs">$0.00</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('ps')">
+        <div class="sec-hdr-l"><span>⚙️</span> Growth Assumptions</div>
+        <span class="chev open" id="ch-ps">▼</span>
+      </div>
+      <div class="sec-body" id="ps">
+        <div class="field"><span class="f-lbl">Annual Rent Growth %</span><input type="number" id="rent-growth" value="2" step=".5" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Annual Expense Growth %</span><input type="number" id="exp-growth" value="2" step=".5" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Property Appreciation %</span><input type="number" id="appr" value="3" step=".5" oninput="calc()"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ROW 3: 5-Year Projection Table — full width -->
+  <div class="sec" id="s-pt">
+    <div class="sec-hdr" onclick="tog('pt')">
+      <div class="sec-hdr-l"><span>📈</span> 5-Year Projection</div>
+      <span class="chev open" id="ch-pt">▼</span>
+    </div>
+    <div class="sec-body" id="pt" style="padding:.75rem 1rem;">
+      <div class="proj-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Annual Cash Flow</th>
+              <th>Cash-on-Cash</th>
+              <th>Cumulative CF</th>
+              <th>Property Value</th>
+              <th>Est. Equity</th>
+            </tr>
+          </thead>
+          <tbody id="proj-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  TheOperationalSoul.com &nbsp;·&nbsp; Built for real estate investors &nbsp;·&nbsp; Results are estimates. Consult a licensed professional before investing.
+</div>
+
+<script>
+function pmt(r,n,pv){if(r===0)return pv/n;return r*pv/(1-Math.pow(1+r,-n));}
+function remBal(loan,r,n,p){if(r===0)return loan-p*n;return loan*Math.pow(1+r,n)-p*(Math.pow(1+r,n)-1)/r;}
+function fmtD(n,dec=0){if(!isFinite(n))return'—';const s=Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec});return(n<0?'-$':'$')+s;}
+function fmtP(n){if(!isFinite(n))return'—';return(n*100).toFixed(2)+'%';}
+function v(id){return parseFloat(document.getElementById(id).value)||0;}
+function s(id,txt){const el=document.getElementById(id);if(el)el.textContent=txt;}
+
+function calc(){
+  const purchase=v('purchase'),dp=v('down-pct')/100,cp=v('close-pct')/100,reno=v('reno');
+  const rate=v('rate')/100,term=v('term'),rent=v('rent'),oInc=v('other-inc'),vac=v('vacancy')/100;
+  const tax=v('tax'),ins=v('insurance'),mp=v('mgmt-pct')/100,xp=v('maint-pct')/100;
+  const cpp=v('capex-pct')/100,hoa=v('hoa'),oExp=v('other-exp');
+  const rg=v('rent-growth')/100,eg=v('exp-growth')/100,ap=v('appr')/100;
+
+  const dd=purchase*dp,cd=purchase*cp,tc=dd+cd+reno,loan=purchase-dd;
+  const mr=rate/12,np=term*12,mtg=loan>0?pmt(mr,np,loan):0;
+  const gi=rent+oInc,vl=gi*vac,egi=gi-vl;
+  const md=rent*mp,xd=rent*xp,capd=rent*cpp;
+  const opEx=tax+ins+md+xd+capd+hoa+oExp,totC=opEx+mtg;
+  const moCF=egi-totC,annCF=moCF*12;
+  const noiM=egi-opEx,noiA=noiM*12;
+  const capR=purchase>0?noiA/purchase:0,coc=tc>0?annCF/tc:0,dscr=mtg>0?noiM/mtg:0;
+  const pv5=purchase*Math.pow(1+ap,5),rb5=remBal(loan,mr,60,mtg),eq5=pv5-rb5;
+
+  s('down-dol',fmtD(dd));s('close-dol',fmtD(cd));s('total-cash',fmtD(tc));
+  s('loan-amt',fmtD(loan));s('mortgage',fmtD(mtg,2));
+  s('vac-loss','-'+fmtD(vl));s('gross-inc',fmtD(gi));s('egi',fmtD(egi));
+  s('mgmt-dol',fmtD(md));s('maint-dol',fmtD(xd));s('capex-dol',fmtD(capd));
+  s('op-exp',fmtD(opEx));s('tot-costs',fmtD(totC,2));
+
+  const cfEl=document.getElementById('d-cf');
+  cfEl.textContent=fmtD(moCF,2);
+  cfEl.className='h-val '+(moCF>=0?'pos':'neg');
+  const annTxt=fmtD(annCF),annColor=moCF>=0?'var(--pos)':'var(--neg)';
+  s('d-ann',annTxt);s('d-ann-mobile',annTxt);
+  document.getElementById('d-ann').style.color=annColor;
+  document.getElementById('d-ann-mobile').style.color=annColor;
+  s('d-coc',fmtP(coc));s('d-cap',fmtP(capR));
+  const de=document.getElementById('d-dscr');
+  de.textContent=isFinite(dscr)?dscr.toFixed(2)+'x':'—';
+  de.className='mc-val'+(dscr>=1.25?'':dscr>0?' warn':'');
+  s('d-eq',fmtD(eq5));
+
+  const tb=document.getElementById('proj-body');
+  tb.innerHTML='';let cum=0;
+  for(let yr=1;yr<=5;yr++){
+    const ey=egi*Math.pow(1+rg,yr),oy=opEx*Math.pow(1+eg,yr),acf=(ey-oy-mtg)*12;
+    const cy=tc>0?acf/tc:0;cum+=acf;
+    const pv=purchase*Math.pow(1+ap,yr),rb=remBal(loan,mr,yr*12,mtg),eq=pv-rb;
+    const cc=acf>=0?'cfp':'cfn',cu=cum>=0?'cup':'cun';
+    tb.innerHTML+=`<tr><td class="yr">${yr}</td><td class="${cc}">${fmtD(acf)}</td><td class="${cc}">${fmtP(cy)}</td><td class="${cu}">${fmtD(cum)}</td><td>${fmtD(pv)}</td><td class="eq">${fmtD(eq)}</td></tr>`;
+  }
+}
+
+function tog(id){
+  if(window.innerWidth>=820)return;
+  const el=document.getElementById(id),ch=document.getElementById('ch-'+id);
+  const isOpen=window.getComputedStyle(el).display!=='none';
+  el.style.display=isOpen?'none':'flex';
+  ch.classList.toggle('open',!isOpen);
+}
+
+let dark=true;
+function toggleMode(){
+  dark=!dark;
+  document.body.classList.toggle('light',!dark);
+  document.getElementById('modeBtn').textContent=dark?'☀️ Light mode':'🌙 Dark mode';
+}
+
+calc();
+</script>
+</body>
+</html>
