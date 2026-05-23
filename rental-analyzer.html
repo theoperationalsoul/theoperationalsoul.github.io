@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rental Property Cash Flow Analyzer | TheOperationalSoul</title>
+<style>
+:root{--bg:#1E1B4B;--surface:#252060;--border:#3D3880;--text:#E8E5FF;--muted:#9F8FC7;--hint:#7C6DAB;--accent:#7C3AED;--accent2:#4338CA;--ibg:#1A1750;--iborder:#7C3AED;--pos:#4ADE80;--neg:#F87171;--warn:#FBBF24;}
+.light{--bg:#F5F3FF;--surface:#FFFFFF;--border:#E5E7EB;--text:#1E1B4B;--muted:#6B7280;--hint:#9CA3AF;--accent:#7C3AED;--accent2:#4338CA;--ibg:#EDE9FE;--iborder:#7C3AED;--pos:#16A34A;--neg:#DC2626;--warn:#D97706;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:2.5rem;}
+
+/* ── HEADER ── */
+.hdr{background:#1E1B4B;padding:.9rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--accent);position:sticky;top:0;z-index:100;}
+.hdr-t{font-size:.9rem;font-weight:700;color:#C4B5FD;line-height:1.2;}
+.hdr-s{font-size:.68rem;color:#7C6DAB;margin-top:2px;}
+.mode-btn{background:#2D2867;border:1px solid #4338CA;border-radius:20px;padding:5px 13px;color:#C4B5FD;font-size:.75rem;cursor:pointer;white-space:nowrap;}
+.light .mode-btn{background:#EDE9FE;border-color:#7C3AED;color:#4338CA;}
+
+/* ── DASHBOARD ── */
+.dash{background:#1E1B4B;padding:1rem 1.25rem 1.25rem;border-bottom:2px solid var(--accent);}
+.light .dash{background:#F0EDFF;}
+.dash-lbl{font-size:.62rem;font-weight:700;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.7rem;}
+
+/* Mobile: hero full width, metrics 2-col grid below */
+.dash-inner{display:flex;flex-direction:column;gap:.75rem;}
+.hero{background:#252060;border:1.5px solid var(--accent);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.light .hero{background:#EDE9FE;}
+.h-label{font-size:.7rem;color:var(--muted);margin-bottom:3px;}
+.h-val{font-size:2rem;font-weight:700;line-height:1;transition:color .2s;}
+.h-val.pos{color:var(--pos);}
+.h-val.neg{color:var(--neg);}
+.h-note{font-size:.62rem;color:var(--hint);margin-top:4px;}
+.h-right{text-align:right;flex-shrink:0;}
+.h-ann{font-size:1.25rem;font-weight:700;}
+/* metrics grid — 4 cards, 2-col on mobile */
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+/* annual CF card hidden on mobile (shown inside hero) */
+.mc-annual{display:none;}
+.mc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center;}
+.mc-lbl{font-size:.62rem;color:var(--muted);margin-bottom:4px;line-height:1.3;}
+.mc-val{font-size:1.1rem;font-weight:700;}
+.mc-note{font-size:.6rem;color:var(--hint);margin-top:2px;}
+.warn{color:var(--warn);}
+.purple{color:#C4B5FD;}
+.light .purple{color:#7C3AED;}
+
+/* ── MAIN LAYOUT ── */
+/* Mobile: flex column, card-rows are transparent (display:contents) */
+.main-layout{padding:.9rem 1.25rem;display:flex;flex-direction:column;gap:.85rem;}
+.card-row{display:contents;}
+
+/* ── SECTION CARDS ── */
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.sec-hdr{background:#4338CA;padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.sec-hdr-l{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:#fff;}
+.chev{color:#C4B5FD;font-size:.8rem;transition:transform .2s;}
+.chev.open{transform:rotate(180deg);}
+.sec-body{padding:.6rem 1rem;display:flex;flex-direction:column;}
+.field{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);gap:10px;}
+.field:last-child{border-bottom:none;}
+.f-lbl{font-size:.8rem;color:var(--muted);flex:1;line-height:1.3;}
+.f-lbl.auto{font-style:italic;}
+.badge{display:inline-block;background:rgba(124,58,237,.18);color:#A78BFA;font-size:.6rem;padding:2px 5px;border-radius:8px;margin-left:3px;font-weight:600;}
+.light .badge{background:#EDE9FE;color:#7C3AED;}
+input[type=number]{background:var(--ibg);border:1.5px solid var(--iborder);border-radius:6px;color:var(--text);font-size:.88rem;font-weight:600;padding:6px 10px;text-align:right;width:108px;outline:none;-moz-appearance:textfield;}
+input:focus{border-color:#C4B5FD;box-shadow:0 0 0 2px rgba(124,58,237,.25);}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.aval{font-size:.88rem;font-weight:600;color:var(--text);text-align:right;width:108px;padding:6px 10px;}
+.aval.red{color:var(--neg);}
+.tot{background:#1E1B4B;margin:0 -1rem;padding:10px 1rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--accent);}
+.tot+.tot{border-top:1px solid #4338CA;margin-top:1px;}
+.tot-lbl{font-size:.72rem;font-weight:700;color:#A5B4FC;}
+.tot-val{font-size:1rem;font-weight:700;color:#fff;}
+/* Expenses 2-col: stacked on mobile */
+.fields-2col{display:flex;flex-direction:column;}
+.fields-col{display:flex;flex-direction:column;}
+
+/* ── PROJECTION TABLE ── */
+.proj-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.78rem;min-width:480px;}
+thead{background:#4338CA;}
+th{padding:8px;color:#fff;font-weight:600;font-size:.7rem;text-align:center;white-space:nowrap;}
+td{padding:8px;text-align:center;border-bottom:1px solid var(--border);color:var(--text);}
+tr:last-child td{border-bottom:none;}
+tr:nth-child(even){background:rgba(124,58,237,.06);}
+td.yr{font-weight:700;color:var(--accent);}
+td.eq{font-weight:700;color:#C4B5FD;}
+.light td.eq{color:#7C3AED;}
+td.cfp{color:var(--pos);font-weight:600;}
+td.cfn{color:var(--neg);font-weight:600;}
+td.cup{color:var(--pos);}
+td.cun{color:var(--neg);}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:1.25rem 1.25rem 0;font-size:.65rem;color:var(--hint);}
+
+/* ════════════════════════════════════════════════════
+   DESKTOP — 820px+: card grid matching the Excel layout
+   ════════════════════════════════════════════════════ */
+@media(min-width:820px){
+  .hdr{padding:.9rem 2rem;}
+  .hdr-t{font-size:1rem;}
+  .dash{padding:1.25rem 2rem 1.5rem;}
+  .main-layout{padding:1rem 2rem;max-width:1500px;margin:0 auto;}
+
+  /* Dashboard: hero(2fr) + 5 metric cards in one row */
+  .dash-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:10px;align-items:stretch;}
+  .hero{flex-direction:column;align-items:flex-start;justify-content:center;gap:.4rem;margin-bottom:0;}
+  .h-val{font-size:2.2rem;}
+  .h-right{display:none;} /* annual CF now a separate mc on desktop */
+  .mc-annual{display:flex;flex-direction:column;justify-content:center;} /* reveal annual CF card */
+  .metrics{display:contents;} /* children become direct grid items of dash-inner */
+  .mc{display:flex;flex-direction:column;justify-content:center;}
+
+  /* Card rows become actual CSS grids */
+  .card-row{display:grid;gap:10px;align-items:start;}
+  .row-3{grid-template-columns:1fr 1fr 1fr;}
+  .row-2{grid-template-columns:2fr 1fr;}
+
+  /* Sections always open — no collapsible UX on desktop */
+  .sec-hdr{cursor:default;}
+  .chev{display:none;}
+  .sec-body{display:flex !important;}
+
+  /* Expenses: 2-column internal field layout */
+  .fields-2col{display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem;}
+  .fields-col .field:last-child{border-bottom:1px solid var(--border);}
+
+  /* Slightly more
