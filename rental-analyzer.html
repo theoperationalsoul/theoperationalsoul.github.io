@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+Here you go — full updated file, ready to paste:
+html<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -63,9 +64,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .f-lbl.auto{font-style:italic;}
 .badge{display:inline-block;background:rgba(124,58,237,.18);color:#A78BFA;font-size:.6rem;padding:2px 5px;border-radius:8px;margin-left:3px;font-weight:600;}
 .light .badge{background:#EDE9FE;color:#7C3AED;}
-input[type=number]{background:var(--ibg);border:1.5px solid var(--iborder);border-radius:6px;color:var(--text);font-size:.88rem;font-weight:600;padding:6px 10px;text-align:right;width:108px;outline:none;-moz-appearance:textfield;}
+input[type=text]{background:var(--ibg);border:1.5px solid var(--iborder);border-radius:6px;color:var(--text);font-size:.88rem;font-weight:600;padding:6px 10px;text-align:right;width:108px;outline:none;}
 input:focus{border-color:#C4B5FD;box-shadow:0 0 0 2px rgba(124,58,237,.25);}
-input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;}
 .aval{font-size:.88rem;font-weight:600;color:var(--text);text-align:right;width:108px;padding:6px 10px;}
 .aval.red{color:var(--neg);}
 .tot{background:#1E1B4B;margin:0 -1rem;padding:10px 1rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--accent);}
@@ -202,12 +202,12 @@ td.cun{color:var(--neg);}
         <span class="chev open" id="ch-prop">▼</span>
       </div>
       <div class="sec-body" id="prop">
-        <div class="field"><span class="f-lbl">Purchase Price</span><input type="number" id="purchase" value="300000" oninput="calc()"></div>
-        <div class="field"><span class="f-lbl">Down Payment %</span><input type="number" id="down-pct" value="20" step=".5" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Purchase Price</span><input type="text" id="purchase" value="300000" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Down Payment %</span><input type="text" id="down-pct" value="20" oninput="calc()"></div>
         <div class="field"><span class="f-lbl auto">↳ Down Payment $</span><span class="aval" id="down-dol">$60,000</span></div>
-        <div class="field"><span class="f-lbl">Closing Costs %</span><input type="number" id="close-pct" value="2" step=".5" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Closing Costs %</span><input type="text" id="close-pct" value="2" oninput="calc()"></div>
         <div class="field"><span class="f-lbl auto">↳ Closing Costs $</span><span class="aval" id="close-dol">$6,000</span></div>
-        <div class="field"><span class="f-lbl">Renovation Budget</span><input type="number" id="reno" value="0" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Renovation Budget</span><input type="text" id="reno" value="0" oninput="calc()"></div>
         <div class="tot"><span class="tot-lbl">TOTAL CASH NEEDED</span><span class="tot-val" id="total-cash">$66,000</span></div>
       </div>
     </div>
@@ -219,8 +219,8 @@ td.cun{color:var(--neg);}
       </div>
       <div class="sec-body" id="fin">
         <div class="field"><span class="f-lbl auto">Loan Amount (auto)</span><span class="aval" id="loan-amt">$240,000</span></div>
-        <div class="field"><span class="f-lbl">Annual Interest Rate %</span><input type="number" id="rate" value="7" step=".125" oninput="calc()"></div>
-        <div class="field"><span class="f-lbl">Loan Term (years)</span><input type="number" id="term" value="30" step="1" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Annual Interest Rate %</span><input type="text" id="rate" value="7" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Loan Term (years)</span><input type="text" id="term" value="30" oninput="calc()"></div>
         <div class="tot"><span class="tot-lbl">MONTHLY MORTGAGE (P&I)</span><span class="tot-val" id="mortgage">$0.00</span></div>
       </div>
     </div>
@@ -231,9 +231,9 @@ td.cun{color:var(--neg);}
         <span class="chev open" id="ch-inc">▼</span>
       </div>
       <div class="sec-body" id="inc">
-        <div class="field"><span class="f-lbl">Monthly Rent</span><input type="number" id="rent" value="2000" oninput="calc()"></div>
-        <div class="field"><span class="f-lbl">Other Monthly Income</span><input type="number" id="other-inc" value="0" oninput="calc()"></div>
-        <div class="field"><span class="f-lbl">Vacancy Rate %</span><input type="number" id="vacancy" value="8" step=".5" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Monthly Rent</span><input type="text" id="rent" value="2000" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Other Monthly Income</span><input type="text" id="other-inc" value="0" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Vacancy Rate %</span><input type="text" id="vacancy" value="8" oninput="calc()"></div>
         <div class="field"><span class="f-lbl auto">↳ Vacancy Loss</span><span class="aval red" id="vac-loss">-$160</span></div>
         <div class="field"><span class="f-lbl auto">Gross Monthly Income</span><span class="aval" id="gross-inc">$2,000</span></div>
         <div class="tot"><span class="tot-lbl">EFFECTIVE GROSS INCOME (EGI)</span><span class="tot-val" id="egi">$1,840</span></div>
@@ -253,18 +253,18 @@ td.cun{color:var(--neg);}
       <div class="sec-body" id="exp">
         <div class="fields-2col">
           <div class="fields-col">
-            <div class="field"><span class="f-lbl">Property Tax /mo</span><input type="number" id="tax" value="250" oninput="calc()"></div>
-            <div class="field"><span class="f-lbl">Insurance /mo</span><input type="number" id="insurance" value="100" oninput="calc()"></div>
-            <div class="field"><span class="f-lbl">Management %<span class="badge">of rent</span></span><input type="number" id="mgmt-pct" value="10" step=".5" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Property Tax /mo</span><input type="text" id="tax" value="250" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Insurance /mo</span><input type="text" id="insurance" value="100" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Management %<span class="badge">of rent</span></span><input type="text" id="mgmt-pct" value="10" oninput="calc()"></div>
             <div class="field"><span class="f-lbl auto">↳ Management $</span><span class="aval" id="mgmt-dol">$200</span></div>
-            <div class="field"><span class="f-lbl">CapEx Reserves %<span class="badge">of rent</span></span><input type="number" id="capex-pct" value="5" step=".5" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">CapEx Reserves %<span class="badge">of rent</span></span><input type="text" id="capex-pct" value="5" oninput="calc()"></div>
             <div class="field"><span class="f-lbl auto">↳ CapEx $</span><span class="aval" id="capex-dol">$100</span></div>
           </div>
           <div class="fields-col">
-            <div class="field"><span class="f-lbl">Maintenance %<span class="badge">of rent</span></span><input type="number" id="maint-pct" value="5" step=".5" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Maintenance %<span class="badge">of rent</span></span><input type="text" id="maint-pct" value="5" oninput="calc()"></div>
             <div class="field"><span class="f-lbl auto">↳ Maintenance $</span><span class="aval" id="maint-dol">$100</span></div>
-            <div class="field"><span class="f-lbl">HOA /mo</span><input type="number" id="hoa" value="0" oninput="calc()"></div>
-            <div class="field"><span class="f-lbl">Other / Utilities /mo</span><input type="number" id="other-exp" value="0" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">HOA /mo</span><input type="text" id="hoa" value="0" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Other / Utilities /mo</span><input type="text" id="other-exp" value="0" oninput="calc()"></div>
           </div>
         </div>
         <div class="tot" style="margin-top:.25rem;"><span class="tot-lbl">TOTAL OPERATING EXPENSES</span><span class="tot-val" id="op-exp">$750</span></div>
@@ -278,9 +278,9 @@ td.cun{color:var(--neg);}
         <span class="chev open" id="ch-ps">▼</span>
       </div>
       <div class="sec-body" id="ps">
-        <div class="field"><span class="f-lbl">Annual Rent Growth %</span><input type="number" id="rent-growth" value="2" step=".5" oninput="calc()"></div>
-        <div class="field"><span class="f-lbl">Annual Expense Growth %</span><input type="number" id="exp-growth" value="2" step=".5" oninput="calc()"></div>
-        <div class="field"><span class="f-lbl">Property Appreciation %</span><input type="number" id="appr" value="3" step=".5" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Annual Rent Growth %</span><input type="text" id="rent-growth" value="2" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Annual Expense Growth %</span><input type="text" id="exp-growth" value="2" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Property Appreciation %</span><input type="text" id="appr" value="3" oninput="calc()"></div>
       </div>
     </div>
 
@@ -322,7 +322,7 @@ function pmt(r,n,pv){if(r===0)return pv/n;return r*pv/(1-Math.pow(1+r,-n));}
 function remBal(loan,r,n,p){if(r===0)return loan-p*n;return loan*Math.pow(1+r,n)-p*(Math.pow(1+r,n)-1)/r;}
 function fmtD(n,dec=0){if(!isFinite(n))return'—';const s=Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec});return(n<0?'-$':'$')+s;}
 function fmtP(n){if(!isFinite(n))return'—';return(n*100).toFixed(2)+'%';}
-function v(id){return parseFloat(document.getElementById(id).value)||0;}
+function v(id){return parseFloat(document.getElementById(id).value.replace(/,/g,''))||0;}
 function s(id,txt){const el=document.getElementById(id);if(el)el.textContent=txt;}
 
 function calc(){
@@ -388,6 +388,18 @@ function toggleMode(){
 }
 
 calc();
+
+function formatAll(){
+  document.querySelectorAll('input[type=text]').forEach(inp=>{
+    const n=parseFloat(inp.value.replace(/,/g,''));
+    if(isFinite(n))inp.value=n.toLocaleString('en-US',{maximumFractionDigits:3});
+  });
+}
+document.querySelectorAll('input[type=text]').forEach(inp=>{
+  inp.addEventListener('focus',()=>{const n=parseFloat(inp.value.replace(/,/g,''));if(isFinite(n))inp.value=n;});
+  inp.addEventListener('blur',()=>{const n=parseFloat(inp.value.replace(/,/g,''));if(isFinite(n))inp.value=n.toLocaleString('en-US',{maximumFractionDigits:3});});
+});
+formatAll();
 </script>
 </body>
 </html>
