@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRRRR Calculator | TheOperationalSoul</title>
+<style>
+:root{--bg:#1E1B4B;--surface:#252060;--border:#3D3880;--text:#E8E5FF;--muted:#9F8FC7;--hint:#7C6DAB;--accent:#7C3AED;--accent2:#4338CA;--ibg:#1A1750;--iborder:#7C3AED;--pos:#4ADE80;--neg:#F87171;--warn:#FBBF24;}
+.light{--bg:#F5F3FF;--surface:#FFFFFF;--border:#E5E7EB;--text:#1E1B4B;--muted:#6B7280;--hint:#9CA3AF;--accent:#7C3AED;--accent2:#4338CA;--ibg:#EDE9FE;--iborder:#7C3AED;--pos:#16A34A;--neg:#DC2626;--warn:#D97706;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:2.5rem;}
+
+/* ── HEADER ── */
+.hdr{background:#1E1B4B;padding:.9rem 1.25rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--accent);position:sticky;top:0;z-index:100;}
+.hdr-t{font-size:.9rem;font-weight:700;color:#C4B5FD;line-height:1.2;}
+.hdr-s{font-size:.68rem;color:#7C6DAB;margin-top:2px;}
+.mode-btn{background:#2D2867;border:1px solid #4338CA;border-radius:20px;padding:5px 13px;color:#C4B5FD;font-size:.75rem;cursor:pointer;white-space:nowrap;}
+.light .mode-btn{background:#EDE9FE;border-color:#7C3AED;color:#4338CA;}
+
+/* ── DASHBOARD ── */
+.dash{background:#1E1B4B;padding:1rem 1.25rem .75rem;border-bottom:2px solid var(--accent);}
+.light .dash{background:#F0EDFF;}
+.dash-lbl{font-size:.62rem;font-weight:700;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.7rem;}
+.dash-inner{display:flex;flex-direction:column;gap:.75rem;}
+
+/* Hero */
+.hero{background:#252060;border:1.5px solid var(--accent);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.light .hero{background:#EDE9FE;}
+.h-label{font-size:.7rem;color:var(--muted);margin-bottom:3px;}
+.h-val{font-size:2rem;font-weight:700;line-height:1;transition:color .2s;}
+.h-val.pos{color:var(--pos);}
+.h-val.neg{color:var(--neg);}
+.h-note{font-size:.62rem;color:var(--hint);margin-top:4px;}
+.h-right{text-align:right;flex-shrink:0;}
+.h-sub{font-size:1.1rem;font-weight:700;}
+
+/* Metric cards */
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.mc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center;}
+.mc-lbl{font-size:.62rem;color:var(--muted);margin-bottom:4px;line-height:1.3;}
+.mc-val{font-size:1.1rem;font-weight:700;}
+.mc-note{font-size:.6rem;color:var(--hint);margin-top:2px;}
+.mc-recycled{display:none;}
+.warn{color:var(--warn);}
+.purple{color:#C4B5FD;}
+.light .purple{color:#7C3AED;}
+
+/* Verdict banner */
+.verdict-bar{border-radius:10px;padding:.75rem 1.25rem;margin-top:.25rem;text-align:center;font-size:.85rem;font-weight:700;color:#fff;transition:background .3s;background:#4338CA;line-height:1.4;}
+.verdict-bar.strong-buy{background:#14532D;color:#4ADE80;}
+.verdict-bar.caution{background:#78350F;color:#FCD34D;}
+.verdict-bar.neutral{background:#92400E;color:#FCD34D;}
+.verdict-bar.pass{background:#7F1D1D;color:#FCA5A5;}
+.light .verdict-bar{color:#fff;}
+.light .verdict-bar.strong-buy{background:#166534;color:#DCFCE7;}
+.light .verdict-bar.caution{background:#92400E;color:#FEF3C7;}
+.light .verdict-bar.neutral{background:#B45309;color:#FEF9C3;}
+.light .verdict-bar.pass{background:#991B1B;color:#FEE2E2;}
+
+/* ── MAIN LAYOUT ── */
+.main-layout{padding:.9rem 1.25rem;display:flex;flex-direction:column;gap:.85rem;}
+.card-row{display:contents;}
+
+/* ── SECTION CARDS ── */
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.sec-hdr{background:#4338CA;padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.sec-hdr-l{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:600;color:#fff;}
+.chev{color:#C4B5FD;font-size:.8rem;transition:transform .2s;}
+.chev.open{transform:rotate(180deg);}
+.sec-body{padding:.6rem 1rem;display:flex;flex-direction:column;}
+.field{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);gap:10px;}
+.field:last-child{border-bottom:none;}
+.f-lbl{font-size:.8rem;color:var(--muted);flex:1;line-height:1.3;}
+.f-lbl.auto{font-style:italic;}
+.badge{display:inline-block;background:rgba(124,58,237,.18);color:#A78BFA;font-size:.6rem;padding:2px 5px;border-radius:8px;margin-left:3px;font-weight:600;}
+.light .badge{background:#EDE9FE;color:#7C3AED;}
+input[type=text]{background:var(--ibg);border:1.5px solid var(--iborder);border-radius:6px;color:var(--text);font-size:.88rem;font-weight:600;padding:6px 10px;text-align:right;width:108px;outline:none;}
+input:focus{border-color:#C4B5FD;box-shadow:0 0 0 2px rgba(124,58,237,.25);}
+.aval{font-size:.88rem;font-weight:600;color:var(--text);text-align:right;width:108px;padding:6px 10px;}
+.aval.red{color:var(--neg);}
+.aval.grn{color:var(--pos);}
+.tot{background:#1E1B4B;margin:0 -1rem;padding:10px 1rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--accent);}
+.tot+.tot{border-top:1px solid #4338CA;margin-top:1px;}
+.tot-lbl{font-size:.72rem;font-weight:700;color:#A5B4FC;}
+.tot-val{font-size:1rem;font-weight:700;color:#fff;}
+.fields-2col{display:flex;flex-direction:column;}
+.fields-col{display:flex;flex-direction:column;}
+
+/* ── DEAL SUMMARY ── */
+.summary-grid{display:flex;flex-direction:column;gap:0;}
+.sum-group{padding:.5rem 0;}
+.sum-group+.sum-group{border-top:1px solid var(--border);}
+.sum-group-lbl{font-size:.62rem;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.35rem;padding:.25rem 0 0;}
+.sum-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);}
+.sum-row:last-child{border-bottom:none;}
+.sum-lbl{font-size:.8rem;color:var(--muted);flex:1;}
+.sum-val{font-size:.88rem;font-weight:600;color:var(--text);text-align:right;}
+.sum-val.pos{color:var(--pos);}
+.sum-val.neg{color:var(--neg);}
+.sum-val.purple{color:#C4B5FD;}
+.light .sum-val.purple{color:#7C3AED;}
+/* Highlighted summary rows */
+.sum-row.hl{background:rgba(124,58,237,.08);margin:0 -1rem;padding:9px 1rem;border-radius:0;}
+.sum-row.hl .sum-lbl{color:var(--text);font-weight:600;}
+.sum-row.hl .sum-val{font-size:1rem;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:1.25rem 1.25rem 0;font-size:.65rem;color:var(--hint);}
+
+/* ════════════════════════════════════════════════════
+   DESKTOP — 820px+
+   ════════════════════════════════════════════════════ */
+@media(min-width:820px){
+  .hdr{padding:.9rem 2rem;}
+  .hdr-t{font-size:1rem;}
+  .dash{padding:1.25rem 2rem 1rem;}
+  .main-layout{padding:1rem 2rem;max-width:1500px;margin:0 auto;}
+
+  /* Dashboard: hero + 5 metric cards in one row */
+  .dash-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr;gap:10px;align-items:stretch;}
+  .hero{flex-direction:column;align-items:flex-start;justify-content:center;gap:.4rem;margin-bottom:0;}
+  .h-val{font-size:2.2rem;}
+  .h-right{display:none;}
+  .mc-recycled{display:flex;flex-direction:column;justify-content:center;}
+  .metrics{display:contents;}
+  .mc{display:flex;flex-direction:column;justify-content:center;}
+
+  /* Verdict banner full-width below the grid */
+  .verdict-wrap{grid-column:1/-1;}
+
+  /* Card rows */
+  .card-row{display:grid;gap:10px;align-items:start;}
+  .row-3{grid-template-columns:1fr 1fr 1fr;}
+
+  /* Sections always open on desktop */
+  .sec-hdr{cursor:default;}
+  .chev{display:none;}
+  .sec-body{display:flex !important;}
+
+  /* Expenses 2-col */
+  .fields-2col{display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem;}
+  .fields-col .field:last-child{border-bottom:1px solid var(--border);}
+
+  /* Deal summary: 2-col internal grid */
+  .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 2rem;}
+  .summary-grid .sum-group.full{grid-column:1/-1;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <div class="hdr-t">BRRRR Calculator</div>
+    <div class="hdr-s">TheOperationalSoul.com</div>
+  </div>
+  <button class="mode-btn" id="modeBtn" onclick="toggleMode()">☀️ Light mode</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash">
+  <div class="dash-lbl">Results Dashboard</div>
+  <div class="dash-inner">
+
+    <div class="hero">
+      <div>
+        <div class="h-label">Net Monthly Cash Flow</div>
+        <div class="h-val" id="d-cf">$0</div>
+        <div class="h-note">Post-refinance, after all expenses</div>
+      </div>
+      <div class="h-right">
+        <div class="h-label">Capital Recycled</div>
+        <div class="h-sub" id="d-rec-mobile">—</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <!-- Capital Recycled — hidden on mobile (shown in hero right), revealed on desktop -->
+      <div class="mc mc-recycled">
+        <div class="mc-lbl">Capital Recycled</div>
+        <div class="mc-val" id="d-rec">—</div>
+        <div class="mc-note">100%+ = infinite return</div>
+      </div>
+      <div class="mc">
+        <div class="mc-lbl">Cash Left in Deal</div>
+        <div class="mc-val" id="d-left">—</div>
+        <div class="mc-note">Lower is better</div>
+      </div>
+      <div class="mc">
+        <div class="mc-lbl">Cash-on-Cash</div>
+        <div class="mc-val" id="d-coc">—</div>
+        <div class="mc-note">Annual CF / cash left in deal</div>
+      </div>
+      <div class="mc">
+        <div class="mc-lbl">DSCR</div>
+        <div class="mc-val" id="d-dscr">—</div>
+        <div class="mc-note">1.25+ = lender approved</div>
+      </div>
+      <div class="mc">
+        <div class="mc-lbl">Cap Rate</div>
+        <div class="mc-val purple" id="d-cap">—</div>
+        <div class="mc-note">Annual NOI / ARV</div>
+      </div>
+    </div>
+
+    <!-- Verdict banner — full width below metric row -->
+    <div class="verdict-wrap">
+      <div class="verdict-bar" id="verdict-bar">Enter your deal values below to see your verdict.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-layout">
+
+  <!-- ROW 1: Buy | Rehab | Rent -->
+  <div class="card-row row-3">
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('buy')">
+        <div class="sec-hdr-l"><span>🏚️</span> Buy the Property</div>
+        <span class="chev open" id="ch-buy">▼</span>
+      </div>
+      <div class="sec-body" id="buy">
+        <div class="field"><span class="f-lbl">Purchase Price</span><input type="text" id="purchase" value="300,000" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Down Payment %</span><input type="text" id="down-pct" value="20" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Down Payment $</span><span class="aval" id="down-dol">$60,000</span></div>
+        <div class="field"><span class="f-lbl">Closing Costs %</span><input type="text" id="close-pct" value="2" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Closing Costs $</span><span class="aval" id="close-dol">$6,000</span></div>
+        <div class="field"><span class="f-lbl">Hard Money Loan %<span class="badge">optional</span></span><input type="text" id="hml-pct" value="0" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Hard Money $</span><span class="aval" id="hml-dol">$0</span></div>
+        <div class="tot"><span class="tot-lbl">TOTAL ACQUISITION COST</span><span class="tot-val" id="total-acq">$66,000</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('rehab')">
+        <div class="sec-hdr-l"><span>🔨</span> Rehab the Property</div>
+        <span class="chev open" id="ch-rehab">▼</span>
+      </div>
+      <div class="sec-body" id="rehab">
+        <div class="field"><span class="f-lbl">Renovation Budget</span><input type="text" id="reno" value="25,000" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Contingency %</span><input type="text" id="cont-pct" value="10" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Contingency $</span><span class="aval" id="cont-dol">$2,500</span></div>
+        <div class="field"><span class="f-lbl">Holding Period (months)</span><input type="text" id="hold-mo" value="4" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Monthly Holding Cost</span><input type="text" id="hold-cost" value="1,500" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Total Holding Cost</span><span class="aval" id="hold-total">$6,000</span></div>
+        <div class="tot"><span class="tot-lbl">TOTAL REHAB COST</span><span class="tot-val" id="total-rehab">$33,500</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('rent')">
+        <div class="sec-hdr-l"><span>💰</span> Rent the Property</div>
+        <span class="chev open" id="ch-rent">▼</span>
+      </div>
+      <div class="sec-body" id="rent">
+        <div class="field"><span class="f-lbl">Monthly Rent</span><input type="text" id="rent-mo" value="2,500" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Other Monthly Income</span><input type="text" id="other-inc" value="0" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Vacancy Rate %</span><input type="text" id="vacancy" value="8" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Vacancy Loss</span><span class="aval red" id="vac-loss">-$200</span></div>
+        <div class="field"><span class="f-lbl auto">Gross Monthly Income</span><span class="aval" id="gross-inc">$2,500</span></div>
+        <div class="tot"><span class="tot-lbl">EFFECTIVE GROSS INCOME</span><span class="tot-val" id="egi">$2,300</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ROW 2: Expenses | Financing | Refinance -->
+  <div class="card-row row-3">
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('exp')">
+        <div class="sec-hdr-l"><span>📋</span> Monthly Expenses</div>
+        <span class="chev open" id="ch-exp">▼</span>
+      </div>
+      <div class="sec-body" id="exp">
+        <div class="fields-2col">
+          <div class="fields-col">
+            <div class="field"><span class="f-lbl">Property Tax /mo</span><input type="text" id="tax" value="250" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Insurance /mo</span><input type="text" id="insurance" value="100" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Management %<span class="badge">of rent</span></span><input type="text" id="mgmt-pct" value="10" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl auto">↳ Management $</span><span class="aval" id="mgmt-dol">$250</span></div>
+            <div class="field"><span class="f-lbl">CapEx Reserves %<span class="badge">of rent</span></span><input type="text" id="capex-pct" value="5" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl auto">↳ CapEx $</span><span class="aval" id="capex-dol">$125</span></div>
+          </div>
+          <div class="fields-col">
+            <div class="field"><span class="f-lbl">Maintenance %<span class="badge">of rent</span></span><input type="text" id="maint-pct" value="5" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl auto">↳ Maintenance $</span><span class="aval" id="maint-dol">$125</span></div>
+            <div class="field"><span class="f-lbl">HOA /mo</span><input type="text" id="hoa" value="0" oninput="calc()"></div>
+            <div class="field"><span class="f-lbl">Other /mo</span><input type="text" id="other-exp" value="0" oninput="calc()"></div>
+          </div>
+        </div>
+        <div class="tot" style="margin-top:.25rem;"><span class="tot-lbl">TOTAL MONTHLY EXPENSES</span><span class="tot-val" id="total-opex">$850</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('fin')">
+        <div class="sec-hdr-l"><span>🏦</span> Original Financing</div>
+        <span class="chev open" id="ch-fin">▼</span>
+      </div>
+      <div class="sec-body" id="fin">
+        <div class="field"><span class="f-lbl auto">Loan Amount (auto)</span><span class="aval" id="orig-loan">$240,000</span></div>
+        <div class="field"><span class="f-lbl">Interest Rate %</span><input type="text" id="orig-rate" value="7.25" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Loan Term (years)</span><input type="text" id="orig-term" value="30" oninput="calc()"></div>
+        <div class="tot"><span class="tot-lbl">MONTHLY MORTGAGE (P&I)</span><span class="tot-val" id="orig-mtg">$0</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-hdr" onclick="tog('refi')">
+        <div class="sec-hdr-l"><span>🔄</span> Refinance</div>
+        <span class="chev open" id="ch-refi">▼</span>
+      </div>
+      <div class="sec-body" id="refi">
+        <div class="field"><span class="f-lbl">After Repair Value (ARV)</span><input type="text" id="arv" value="350,000" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Refi LTV %</span><input type="text" id="refi-ltv" value="75" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ Max Refi Loan</span><span class="aval" id="refi-loan">$262,500</span></div>
+        <div class="field"><span class="f-lbl">New Interest Rate %</span><input type="text" id="refi-rate" value="7.25" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl">Refi Loan Term (years)</span><input type="text" id="refi-term" value="30" oninput="calc()"></div>
+        <div class="field"><span class="f-lbl auto">↳ New Monthly Payment</span><span class="aval" id="refi-pmt">$0</span></div>
+        <div class="tot"><span class="tot-lbl">CASH-OUT AT REFINANCE</span><span class="tot-val" id="cash-out">$22,500</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ROW 3: Deal Summary — full width -->
+  <div class="sec">
+    <div class="sec-hdr" onclick="tog('summary')">
+      <div class="sec-hdr-l"><span>📊</span> Deal Summary</div>
+      <span class="chev open" id="ch-summary">▼</span>
+    </div>
+    <div class="sec-body" id="summary">
+      <div class="summary-grid">
+
+        <!-- Capital Recovery -->
+        <div class="sum-group">
+          <div class="sum-group-lbl">Capital Recovery</div>
+          <div class="sum-row"><span class="sum-lbl">Total Cash Invested</span><span class="sum-val" id="s-total-in">—</span></div>
+          <div class="sum-row"><span class="sum-lbl">Cash Pulled Out at Refi</span><span class="sum-val grn" id="s-cash-out">—</span></div>
+          <div class="sum-row hl"><span class="sum-lbl">Cash Left in Deal</span><span class="sum-val" id="s-cash-left">—</span></div>
+          <div class="sum-row hl"><span class="sum-lbl">Capital Recycled %</span><span class="sum-val" id="s-recycled">—</span></div>
+          <div class="sum-row"><span class="sum-lbl">Gross Equity at Purchase</span><span class="sum-val purple" id="s-equity">—</span></div>
+        </div>
+
+        <!-- Cash Flow Analysis -->
+        <div class="sum-group">
+          <div class="sum-group-lbl">Cash Flow Analysis</div>
+          <div class="sum-row"><span class="sum-lbl">Effective Gross Income /mo</span><span class="sum-val" id="s-egi">—</span></div>
+          <div class="sum-row"><span class="sum-lbl">Total Monthly Expenses</span><span class="sum-val red" id="s-opex">—</span></div>
+          <div class="sum-row"><span class="sum-lbl">NOI / month</span><span class="sum-val" id="s-noi">—</span></div>
+          <div class="sum-row"><span class="sum-lbl">New Monthly Mortgage</span><span class="sum-val red" id="s-newmtg">—</span></div>
+          <div class="sum-row hl"><span class="sum-lbl">Net Monthly Cash Flow</span><span class="sum-val" id="s-cf">—</span></div>
+        </div>
+
+        <!-- Return Metrics — full width -->
+        <div class="sum-group full">
+          <div class="sum-group-lbl">Return Metrics</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;">
+            <div class="sum-row" style="flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px 10px 0;">
+              <span class="sum-lbl">Cash-on-Cash Return</span>
+              <span class="sum-val" id="s-coc" style="font-size:1.1rem;">—</span>
+              <span style="font-size:.6rem;color:var(--hint);">Annual CF / cash left</span>
+            </div>
+            <div class="sum-row" style="flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;border-left:1px solid var(--border);">
+              <span class="sum-lbl">Cap Rate</span>
+              <span class="sum-val purple" id="s-cap" style="font-size:1.1rem;">—</span>
+              <span style="font-size:.6rem;color:var(--hint);">Annual NOI / ARV</span>
+            </div>
+            <div class="sum-row" style="flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;border-left:1px solid var(--border);">
+              <span class="sum-lbl">DSCR (post-refi)</span>
+              <span class="sum-val" id="s-dscr" style="font-size:1.1rem;">—</span>
+              <span style="font-size:.6rem;color:var(--hint);">1.25+ lender approved</span>
+            </div>
+            <div class="sum-row" style="flex-direction:column;align-items:flex-start;gap:2px;padding:10px 0 10px 12px;border-left:1px solid var(--border);">
+              <span class="sum-lbl">Annual Cash Flow</span>
+              <span class="sum-val" id="s-ann" style="font-size:1.1rem;">—</span>
+              <span style="font-size:.6rem;color:var(--hint);">Net monthly CF x 12</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  TheOperationalSoul.com &nbsp;·&nbsp; Built for real estate investors &nbsp;·&nbsp; Results are estimates. Consult a licensed professional before investing.
+</div>
+
+<script>
+function pmt(r,n,pv){if(r===0||n===0||pv===0)return 0;return r*pv/(1-Math.pow(1+r,-n));}
+function fmtD(n,dec=0){if(!isFinite(n)||isNaN(n))return'—';const s=Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec});return(n<0?'-$':'$')+s;}
+function fmtP(n,dec=1){if(!isFinite(n)||isNaN(n))return'—';return(n*100).toFixed(dec)+'%';}
+function v(id){const el=document.getElementById(id);if(!el)return 0;return parseFloat(el.value.replace(/,/g,''))||0;}
+function s(id,txt){const el=document.getElementById(id);if(el)el.textContent=txt;}
+
+function calc(){
+  // ── Buy ──
+  const purchase=v('purchase');
+  const dpPct=v('down-pct')/100, dpDol=purchase*dpPct;
+  const clPct=v('close-pct')/100, clDol=purchase*clPct;
+  const hmlPct=v('hml-pct')/100, hmlDol=purchase*hmlPct;
+  const totalAcq=dpDol+clDol+hmlDol;
+
+  // ── Rehab ──
+  const reno=v('reno');
+  const contPct=v('cont-pct')/100, contDol=reno*contPct;
+  const holdMo=v('hold-mo'), holdCost=v('hold-cost'), holdTotal=holdMo*holdCost;
+  const totalRehab=reno+contDol+holdTotal;
+
+  // ── Total cash in ──
+  const totalIn=totalAcq+totalRehab;
+
+  // ── Rent ──
+  const rentMo=v('rent-mo'), otherInc=v('other-inc');
+  const vacPct=v('vacancy')/100;
+  const grossInc=rentMo+otherInc, vacLoss=grossInc*vacPct, egi=grossInc-vacLoss;
+
+  // ── Expenses ──
+  const tax=v('tax'), ins=v('insurance');
+  const mgmtPct=v('mgmt-pct')/100, mgmtDol=rentMo*mgmtPct;
+  const maintPct=v('maint-pct')/100, maintDol=rentMo*maintPct;
+  const capexPct=v('capex-pct')/100, capexDol=rentMo*capexPct;
+  const hoa=v('hoa'), otherExp=v('other-exp');
+  const totalOpex=tax+ins+mgmtDol+maintDol+capexDol+hoa+otherExp;
+
+  // ── Original financing ──
+  const origLoan=purchase-dpDol;
+  const origRate=v('orig-rate')/100, origTerm=v('orig-term');
+  const origMtg=pmt(origRate/12,origTerm*12,origLoan);
+
+  // ── Refinance ──
+  const arv=v('arv'), refiLtv=v('refi-ltv')/100;
+  const maxRefiLoan=arv*refiLtv;
+  const refiRate=v('refi-rate')/100, refiTerm=v('refi-term');
+  const newMtg=pmt(refiRate/12,refiTerm*12,maxRefiLoan);
+  const cashOut=maxRefiLoan-origLoan;
+
+  // ── Results ──
+  const noi=egi-totalOpex;
+  const netCF=noi-newMtg;
+  const annCF=netCF*12;
+  const cashLeft=totalIn-cashOut;
+  const capitalRecycled=totalIn>0?cashOut/totalIn:0;
+  const cocBase=cashLeft>0?cashLeft:totalIn;
+  const coc=cocBase>0?annCF/cocBase:0;
+  const capRate=arv>0?(noi*12)/arv:0;
+  const dscr=newMtg>0?noi/newMtg:0;
+  const grossEquity=arv-maxRefiLoan;
+
+  // ── Update Buy section ──
+  s('down-dol',fmtD(dpDol));
+  s('close-dol',fmtD(clDol));
+  s('hml-dol',fmtD(hmlDol));
+  s('total-acq',fmtD(totalAcq));
+
+  // ── Update Rehab section ──
+  s('cont-dol',fmtD(contDol));
+  s('hold-total',fmtD(holdTotal));
+  s('total-rehab',fmtD(totalRehab));
+
+  // ── Update Rent section ──
+  s('vac-loss','-'+fmtD(vacLoss));
+  s('gross-inc',fmtD(grossInc));
+  s('egi',fmtD(egi));
+
+  // ── Update Expenses ──
+  s('mgmt-dol',fmtD(mgmtDol));
+  s('maint-dol',fmtD(maintDol));
+  s('capex-dol',fmtD(capexDol));
+  s('total-opex',fmtD(totalOpex));
+
+  // ── Update Financing ──
+  s('orig-loan',fmtD(origLoan));
+  s('orig-mtg',fmtD(origMtg,2));
+
+  // ── Update Refinance ──
+  s('refi-loan',fmtD(maxRefiLoan));
+  s('refi-pmt',fmtD(newMtg,2));
+  s('cash-out',fmtD(cashOut));
+
+  // ── Update Dashboard ──
+  const cfEl=document.getElementById('d-cf');
+  cfEl.textContent=fmtD(netCF,2);
+  cfEl.className='h-val '+(netCF>=0?'pos':'neg');
+
+  const recTxt=fmtP(capitalRecycled);
+  s('d-rec',recTxt); s('d-rec-mobile',recTxt);
+  document.getElementById('d-rec').style.color=capitalRecycled>=1?'var(--pos)':capitalRecycled>=.75?'var(--warn)':'var(--neg)';
+
+  const leftEl=document.getElementById('d-left');
+  leftEl.textContent=fmtD(cashLeft);
+  leftEl.style.color=cashLeft<=0?'var(--pos)':cashLeft<totalIn?'var(--warn)':'var(--text)';
+
+  const cocEl=document.getElementById('d-coc');
+  cocEl.textContent=cashLeft<=0&&netCF>0?'Infinite':fmtP(coc);
+  cocEl.style.color=coc>=.1||cashLeft<=0?'var(--pos)':coc>=.05?'var(--warn)':'var(--neg)';
+
+  const dscrEl=document.getElementById('d-dscr');
+  dscrEl.textContent=isFinite(dscr)&&dscr>0?dscr.toFixed(2)+'x':'—';
+  dscrEl.className='mc-val'+(dscr>=1.25?'':dscr>0?' warn':'');
+
+  s('d-cap',fmtP(capRate));
+
+  // ── Verdict banner ──
+  const bar=document.getElementById('verdict-bar');
+  bar.className='verdict-bar';
+  if(totalIn>0){
+    if(capitalRecycled>=1){
+      bar.className='verdict-bar strong-buy';
+      bar.textContent='STRONG BUY — You recovered 100%+ of your capital. This property essentially pays for itself.';
+    } else if(capitalRecycled>=.75){
+      bar.className='verdict-bar caution';
+      bar.textContent='PROCEED WITH CAUTION — You recovered 75–99% of capital. Solid deal, not quite infinite return.';
+    } else if(capitalRecycled>=.5){
+      bar.className='verdict-bar neutral';
+      bar.textContent='NEUTRAL — You recovered 50–74% of capital. Consider whether the cash flow justifies tied-up capital.';
+    } else {
+      bar.className='verdict-bar pass';
+      bar.textContent='Pass on the Deal — Less than 50% capital recovery. The BRRRR math does not work on this deal.';
+    }
+  } else {
+    bar.textContent='Enter your deal values below to see your verdict.';
+  }
+
+  // ── Update Deal Summary ──
+  s('s-total-in',fmtD(totalIn));
+  s('s-cash-out',fmtD(cashOut));
+
+  const leftEl2=document.getElementById('s-cash-left');
+  leftEl2.textContent=fmtD(cashLeft);
+  leftEl2.className='sum-val'+(cashLeft<=0?' pos':cashLeft<totalIn?' warn':'');
+
+  const recEl=document.getElementById('s-recycled');
+  recEl.textContent=fmtP(capitalRecycled);
+  recEl.className='sum-val'+(capitalRecycled>=1?' pos':capitalRecycled>=.75?' warn':' neg');
+
+  s('s-equity',fmtD(grossEquity));
+  s('s-egi',fmtD(egi));
+  s('s-opex',fmtD(totalOpex));
+  s('s-noi',fmtD(noi));
+  s('s-newmtg',fmtD(newMtg,2));
+
+  const cfEl2=document.getElementById('s-cf');
+  cfEl2.textContent=fmtD(netCF,2);
+  cfEl2.className='sum-val'+(netCF>=0?' pos':' neg');
+
+  const cocEl2=document.getElementById('s-coc');
+  cocEl2.textContent=cashLeft<=0&&netCF>0?'Infinite':fmtP(coc);
+  cocEl2.className='sum-val'+(coc>=.1||cashLeft<=0?'':coc>=.05?' warn':' neg');
+
+  s('s-cap',fmtP(capRate));
+
+  const dscrEl2=document.getElementById('s-dscr');
+  dscrEl2.textContent=isFinite(dscr)&&dscr>0?dscr.toFixed(2)+'x':'—';
+  dscrEl2.className='sum-val'+(dscr>=1.25?' pos':dscr>0?' warn':' neg');
+
+  const annEl=document.getElementById('s-ann');
+  annEl.textContent=fmtD(annCF);
+  annEl.className='sum-val'+(annCF>=0?' pos':' neg');
+}
+
+function tog(id){
+  if(window.innerWidth>=820)return;
+  const el=document.getElementById(id),ch=document.getElementById('ch-'+id);
+  const isOpen=window.getComputedStyle(el).display!=='none';
+  el.style.display=isOpen?'none':'flex';
+  ch.classList.toggle('open',!isOpen);
+}
+
+let dark=true;
+function toggleMode(){
+  dark=!dark;
+  document.body.classList.toggle('light',!dark);
+  document.getElementById('modeBtn').textContent=dark?'☀️ Light mode':'🌙 Dark mode';
+}
+
+// Comma formatting
+function formatAll(){
+  document.querySelectorAll('input[type=text]').forEach(inp=>{
+    const n=parseFloat(inp.value.replace(/,/g,''));
+    if(isFinite(n))inp.value=n.toLocaleString('en-US',{maximumFractionDigits:3});
+  });
+}
+document.querySelectorAll('input[type=text]').forEach(inp=>{
+  inp.addEventListener('focus',()=>{const n=parseFloat(inp.value.replace(/,/g,''));if(isFinite(n))inp.value=n;});
+  inp.addEventListener('blur',()=>{const n=parseFloat(inp.value.replace(/,/g,''));if(isFinite(n))inp.value=n.toLocaleString('en-US',{maximumFractionDigits:3});});
+});
+
+calc();
+formatAll();
+</script>
+</body>
+</html>
